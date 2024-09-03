@@ -1,0 +1,74 @@
+@startuml
+
+/'Auth'/
+folder Auth {
+[AuthService]
+[JwtManager]
+[AuthProvider]
+
+interface AuthInterface
+interface jwtAuthInterface
+interface AuthProviderInterface
+
+[AuthService] -up.|> AuthInterface
+[AuthService] -right.|> jwtAuthInterface
+[AuthService] -left.|> AuthProviderInterface
+[JwtManager] -left.|> jwtAuthInterface
+[AuthProvider] -right.|> AuthProviderInterface
+}
+
+/'Authorization'/
+[AuthorizationService]
+
+interface AuthorizationInterface
+
+[AuthorizationService] -up.|> AuthorizationInterface
+
+/'Notification'/
+[Notification]
+
+interface NotificationInterface
+
+[Notification] -left.|> NotificationInterface
+
+/'Pratician'/
+[Pratician]
+
+interface PraticianInterface
+
+[Pratician] -up.|> PraticianInterface
+
+/'Patient'/
+[Patient]
+
+interface PatientInterface
+
+[Patient] -up.|> PatientInterface
+
+/'Personnel'/
+[Personnel]
+
+interface PersonnelInterface
+
+[Personnel] -up.|> PersonnelInterface
+
+/'RendezVous'/
+[RendezVous]
+
+interface RendezVousInterface
+
+[RendezVous] -up.|> RendezVousInterface
+
+/'RPPS'/
+[RPPS]
+
+interface RPPSInterface
+
+[RPPS] -left.|> RPPSInterface
+
+/'Relations'/
+RendezVous -down..> Patient
+RendezVous -up..> Pratician
+Pratician -right.( RPPSInterface
+RendezVous -right.( NotificationInterface
+@enduml
