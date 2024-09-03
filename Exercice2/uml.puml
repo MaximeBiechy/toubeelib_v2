@@ -1,0 +1,120 @@
+@startuml
+package "core"{
+    package "dto"{
+        package "RDV"{
+            class "InputRdvDTO"{
+                - string $date
+                - string $time
+                - string $praticien_id
+                - string $patient_id
+                - string $speciality_id
+            }
+            class "RdvDTO"{
+                - string $id
+                - string $date
+                - string $time
+                - string $praticien_name
+                - string $patient_name
+                - string $speciality_label
+                - string $patient_status
+                - string $status
+            }
+            class "RdvIsDisponibleDTO"{
+                - string $date
+                - string $time
+                - string $praticien_id
+            }
+
+        }
+    }
+    package "domain"{
+        package "entities"{
+            class "RDV"{
+                - string $id
+                - string $date
+                - string $time
+                - string $status
+            }
+            class "Praticien"{
+                - string $id
+                - string $name
+            }
+            class "Patient"{
+                - string $id
+                - string $name
+                - int $numSecu
+                - string $address
+                - string $phone
+                - string $status
+            }
+            class "Speciality"{
+                - string $id
+                - string $label
+            }
+            "Praticien" "1"--"*" "Speciality"
+            "RDV" "1"--"1" "Praticien"
+            "RDV" "1"--"1" "Patient"
+        }
+    }
+    package "service"{
+
+            package "RDV"{
+                interface "RDVServiceInterface"{
+                    + getRDVById(string $rdv_id): RdvDTO
+                    + getRDVsByPatient(string $patient_id): List<RdvDTO>
+                    + getRDVsByPraticien(string $praticien_id): List<RdvDTO>
+                    + getRDVsBySpeciality(string $speciality_id): List<RdvDTO>
+                    + getRDVsByDate(string $date): List<RdvDTO>
+                    + getRDVByDateTime(string $date, string $time): RdvDTO
+                    + getRDVs(): List<RdvDTO>
+                    + isDisponible(RdvIsDisponibleDTO $rdv): bool
+                    + addRDV(InputRdvDTO $rdv): RdvDTO
+                    + updateRDV(string $rdv_id, InputRdvDTO $rdvI): RdvDTO
+                    + deleteRDV(string $rdv_id): void
+                }
+                class "RDVService"{
+                    + getRDVById(string $rdv_id): RdvDTO
+                    + getRDVsByPatient(string $patient_id): List<RdvDTO>
+                    + getRDVsByPraticien(string $praticien_id): List<RdvDTO>
+                    + getRDVsBySpeciality(string $speciality_id): List<RdvDTO>
+                    + getRDVsByDate(string $date): List<RdvDTO>
+                    + getRDVByDateTime(string $date, string $time): RdvDTO
+                    + getRDVs(): List<RdvDTO>
+                    + isDisponible(RdvIsDisponibleDTO $rdv): bool
+                    + addRDV(InputRdvDTO $rdv): RdvDTO
+                    + updateRDV(string $rdv_id, InputRdvDTO $rdvI): RdvDTO
+                    + deleteRDV(string $rdv_id): void
+                }
+                exception "RDVNotFoundException"{
+                    + __construct(string $message)
+                }
+                exception "RDVBadDataException"{
+                    + __construct(string $message)
+                }
+                "RDVService" ..up|> "RDVServiceInterface"
+                "RDVService" ..> "RDVNotFoundException"
+                "RDVService" ..> "RDVBadDataException"
+            }
+    }
+
+    package "interfaces"{
+        interface "NotificationServiceInterface"{
+            + notifyClient(string $user_id, string $message): bool
+        }
+    }
+
+}
+
+package "infrastructure"{
+    package "adapters"{
+        class "PHPMailerEmailNotificationAdapter"{
+            - PHPMailer $mailer
+            + __construct(PHPMailer $mailer)
+            + notifyClient(string $user_id, string $message): bool
+        }
+
+    }
+    "PHPMailerEmailNotificationAdapter" ..up|> "NotificationServiceInterface"
+}
+"RDVService" ..> "NotificationServiceInterface"
+@enduml
