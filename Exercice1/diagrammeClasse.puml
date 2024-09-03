@@ -1,0 +1,114 @@
+@startuml
+package "core"{
+    package "service"{
+        package "auth"{
+            interface "AuthServiceInterface"{
+                        + register(string $user_id, string $password): string
+                        + byCredentials(string $user_id, string $password): bool
+                        + getUserByEmail(string $email): array
+
+            }
+            class "AuthService"{
+                + register(string $user_id, string $password): string
+                + byCredentials(string $user_id, string $password): bool
+                + getUserByEmail(string $email): array
+            }
+            "AuthService" ..up|> "AuthServiceInterface"
+        }
+        package "Authorization"{
+            interface "AuthorizationServiceInterface"{
+                + isGranted(string $user_id, int $operation, string $ressource_id): bool
+            }
+            class "AuthorizationService"{
+                + isGranted(string $user_id, int $operation, string $ressource_id): bool
+            }
+            "AuthorizationService" ..up|> "AuthorizationServiceInterface"
+        }
+    }
+    package "Praticien"{
+    interface "PraticienServiceInterface"{
+            + getPraticien(string $praticien_id): array
+            + getPraticiens(): array
+            + addPraticien(array $praticien): string
+            + updatePraticien(string $praticien_id, array $praticien): bool
+            + deletePraticien(string $praticien_id): bool
+        }
+        class "PraticienService"{
+            + getPraticien(string $praticien_id): array
+            + getPraticiens(): array
+            + addPraticien(array $praticien): string
+            + updatePraticien(string $praticien_id, array $praticien): bool
+            + deletePraticien(string $praticien_id): bool
+        }
+        "PraticienService" ..up|> "PraticienServiceInterface"
+    }
+    package "Patient"{
+        interface "PatientServiceInterface"{
+            + getPatient(string $patient_id): array
+            + getPatients(): array
+            + addPatient(array $patient): string
+            + updatePatient(string $patient_id, array $patient): bool
+            + deletePatient(string $patient_id): bool
+        }
+        class "PatientService"{
+            + getPatient(string $patient_id): array
+            + getPatients(): array
+            + addPatient(array $patient): string
+            + updatePatient(string $patient_id, array $patient): bool
+            + deletePatient(string $patient_id): bool
+        }
+        "PatientService" ..up|> "PatientServiceInterface"
+    }
+
+    package "RDV"{
+        interface "RDVServiceInterface"{
+            + getRDV(string $rdv_id): array
+            + getRDVs(): array
+            + addRDV(array $rdv): string
+            + updateRDV(string $rdv_id, array $rdv): bool
+            + deleteRDV(string $rdv_id): bool
+        }
+        class "RDVService"{
+            + getRDV(string $rdv_id): array
+            + getRDVs(): array
+            + addRDV(array $rdv): string
+            + updateRDV(string $rdv_id, array $rdv): bool
+            + deleteRDV(string $rdv_id): bool
+        }
+        "RDVService" ..up|> "RDVServiceInterface"
+    }
+    package "interfaces"{
+        interface "NotificationServiceInterface"{
+            + notifyClient(string $user_id, string $message): bool
+        }
+        interface "RPPSServiceInterface"{
+            + getRPPS(string $rpps_id): array
+            + getRPPSs(): array
+            + addRPPS(array $rpps): string
+            + updateRPPS(string $rpps_id, array $rpps): bool
+            + deleteRPPS(string $rpps_id): bool
+        }
+    }
+
+}
+
+package "infrastructure"{
+    package "adapters"{
+        class "PHPMailerEmailNotificationAdapter"{
+            - PHPMailer $mailer
+            + __construct(PHPMailer $mailer)
+            + notifyClient(string $user_id, string $message): bool
+        }
+        class PHPRPPSAdapter{
+            ...
+        }
+    }
+    "PHPMailerEmailNotificationAdapter" ..up|> "NotificationServiceInterface"
+    "PHPRPPSAdapter" ..up|> "RPPSServiceInterface"
+}
+
+"RDVService" ..> "PraticienServiceInterface"
+"RDVService" ..> "PatientServiceInterface"
+"RDVService" ..> "NotificationServiceInterface"
+"PraticienService" ..> "RPPSServiceInterface"
+@enduml
