@@ -1,0 +1,21 @@
+@startuml
+
+actor Patient
+
+Patient -> PatientService: prendreRdv()
+PatientService -> DossierPatientService: verifierDossierPatient()
+DossierPatientService -> PatientService: dossierExistant / creerNouveauDossier()
+PatientService -> RendezVousService: creerRdv()
+RendezVousService -> PraticienService: verifierDisponibilitePraticien()
+PraticienService --> RendezVousService: bool
+alt [Praticien disponible]
+    RendezVousService -> RendezVousService: reserverCreneau()
+    RendezVousService -> NotificationService: envoyerNotification()
+    NotificationService --> Patient: confirmationRdv()
+else [Praticien non disponible]
+    RendezVousService -> NotificationService: envoyerNotification()
+    NotificationService --> Patient: echecReservation()
+end
+
+@enduml
+
