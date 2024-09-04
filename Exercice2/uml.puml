@@ -1,7 +1,7 @@
 @startuml
-package "core"{
-    package "dto"{
-        package "RDV"{
+package "core" #DDDDDD{
+    package "dto" #FFAAAA{
+        package "rdv" #DDDDDD{
             class "InputRdvDTO"{
                 - string $date
                 - string $time
@@ -24,41 +24,50 @@ package "core"{
                 - string $time
                 - string $praticien_id
             }
-
         }
     }
-    package "domain"{
-        package "entities"{
-            class "RDV"{
-                - string $id
-                - string $date
-                - string $time
-                - string $status
+    package "domain" #FFAAAA{
+        package "entities" #DDDDDD{
+
+            package "rdv" #FFAAAA{
+                class "RDV"{
+                    - string $id
+                    - string $date
+                    - string $time
+                    - string $status
+                }
+
             }
-            class "Praticien"{
-                - string $id
-                - string $name
+            package "praticien" #FFAAAA{
+                class "Praticien"{
+                    - string $id
+                    - string $name
+                }
+                class "Speciality" {
+                    - string $id
+                    - string $label
+                }
             }
-            class "Patient"{
-                - string $id
-                - string $name
-                - int $numSecu
-                - string $address
-                - string $phone
-                - string $status
+            package "patient" #FFAAAA{
+                class "Patient"{
+                    - string $id
+                    - string $name
+                    - int $numSecu
+                    - string $address
+                    - string $phone
+                    - string $status
+                }
+
             }
-            class "Speciality"{
-                - string $id
-                - string $label
-            }
-            "Praticien" "1"--"*" "Speciality"
             "RDV" "1"--"1" "Praticien"
             "RDV" "1"--"1" "Patient"
+            "Praticien" "1"--"*" "Speciality"
+
         }
     }
-    package "service"{
+    package "service" #FFAAAA{
 
-            package "RDV"{
+            package "rdv" #DDDDDD{
                 interface "RDVServiceInterface"{
                     + getRDVById(string $rdv_id): RdvDTO
                     + getRDVsByPatient(string $patient_id): List<RdvDTO>
@@ -80,10 +89,13 @@ package "core"{
                     + getRDVsByDate(string $date): List<RdvDTO>
                     + getRDVByDateTime(string $date, string $time): RdvDTO
                     + getRDVs(): List<RdvDTO>
+                    + getRDVsStatusOk(): List<RdvDTO>
+                    + getRDVsStatusKo(): List<RdvDTO>
                     + isDisponible(RdvIsDisponibleDTO $rdv): bool
                     + addRDV(InputRdvDTO $rdv): RdvDTO
                     + updateRDV(string $rdv_id, InputRdvDTO $rdvI): RdvDTO
                     + deleteRDV(string $rdv_id): void
+
                 }
                 exception "RDVNotFoundException"{
                     + __construct(string $message)
@@ -97,24 +109,38 @@ package "core"{
             }
     }
 
-    package "interfaces"{
+    package "interfaces" #FFAAAA{
         interface "NotificationServiceInterface"{
             + notifyClient(string $user_id, string $message): bool
+        }
+        interface "SaveInLogServiceInterface"{
+            + save(string $rdv_id, string $message): bool
         }
     }
 
 }
 
-package "infrastructure"{
-    package "adapters"{
+package "infrastructure" #DDDDDD{
+    package "adapters" #FFAAAA{
         class "PHPMailerEmailNotificationAdapter"{
             - PHPMailer $mailer
             + __construct(PHPMailer $mailer)
             + notifyClient(string $user_id, string $message): bool
         }
+        class "FileSaveInLogAdapter"{
+            - string $path
+            + __construct(string $path)
+            + save(string $rdv_id, string $message): bool
+        }
 
     }
+
     "PHPMailerEmailNotificationAdapter" ..up|> "NotificationServiceInterface"
+    "FileSaveInLogAdapter" ..up|> "SaveInLogServiceInterface"
 }
 "RDVService" ..> "NotificationServiceInterface"
+"RDVService" ..> "SaveInLogServiceInterface"
+"RDVService" ..> "InputRdvDTO"
+"RDVService" ..> "RdvDTO"
+"RDVService" ..> "RdvIsDisponibleDTO"
 @enduml
