@@ -1,0 +1,338 @@
+@startuml
+skinparam linetype ortho
+
+package "core"{
+    package "domain"{
+        package "entities"{
+            package "patient"{
+                class Patient{
+                    - id : string
+                    - name : string
+                    - birthDate : string
+                    - securityNumber : string
+                    - phone : string
+                    - address : string
+                    - email : string
+                }
+                class PatientFolder{
+                    - id : string
+                }
+                class Document{
+                    - id : string
+                    - title : string
+                    - content : string
+                    - date : string
+                }
+                Patient "1" -- "1" PatientFolder : - folder
+                PatientFolder "1" -- "*" Document : - documents
+            }
+            package "praticien"{
+                class Praticien{
+                    - id : string
+                    - name : string
+                    - rpps : string
+                }
+                class Speciality{
+                    - id : string
+                    - name : string
+                }
+                class Place{
+                    - id : string
+                    - name : string
+                    - address : string
+                    - phone : string
+                    - email : string
+                }
+                class Agenda{
+                    - id : string
+                }
+                Praticien "1" -- "*" Speciality : - specialities
+                Praticien "1" -- "1" Place : - job_place
+                Praticien "1" -- "1" Agenda : - agenda
+
+            }
+            package "rdv"{
+                class RDV{
+                    - id : string
+                    - date : string
+                    - status : string
+                }
+                RDV "1" -- "1" Patient : - patient
+                RDV "1" -- "1" Praticien : - praticien
+                RDV "*" -- "1" Agenda : - rdvs
+            }
+        }
+    }
+    package "dto"{
+        package "patient"{
+            class PatientDto{
+                + id : string
+                + name : string
+                + birthDate : string
+                + securityNumber : string
+                + phone : string
+                + address : string
+                + email : string
+            }
+            class PatientFolderDto{
+                + id : string
+            }
+            class DocumentDto{
+                + id : string
+                + title : string
+                + content : string
+                + date : string
+            }
+            PatientDto "1" -- "1" PatientFolderDto : + folder
+            PatientFolderDto "1" -- "*" DocumentDto : + documents
+
+            class CreatePatientDto{
+                + name : string
+                + birthDate : string
+                + securityNumber : string
+                + phone : string
+                + address : string
+                + email : string
+            }
+            class DeletePatientDto{
+                + id : string
+            }
+            class CreateDocumentDto{
+                + title : string
+                + content : string
+                + date : string
+            }
+            class DeleteDocumentDto{
+                + id : string
+            }
+        }
+        package "praticien"{
+            class PraticienDto{
+                + id : string
+                + name : string
+                + rpps : string
+            }
+            class SpecialityDto{
+                + id : string
+                + name : string
+            }
+            class PlaceDto{
+                + id : string
+                + name : string
+                + address : string
+                + phone : string
+                + email : string
+            }
+            class AgendaDto{
+                + id : string
+            }
+            PraticienDto "1" -- "*" SpecialityDto : + specialities
+            PraticienDto "1" -- "1" PlaceDto : + job_place
+            PraticienDto "1" -- "1" AgendaDto : + agenda
+
+            class CreatePraticienDto{
+                + name : string
+                + rpps : string
+                + place_id : string
+                + specialities : List<string>
+            }
+            class DeletePraticienDto{
+                + id : string
+            }
+        }
+
+        package "rdv"{
+            class RDVDto{
+                + id : string
+                + date : string
+                + status : string
+            }
+            class UpdateRDVStatusDto{
+                + id : string
+                + status : string
+            }
+            AgendaDto "*" -- "1" RDVDto : + rdvs
+            RDVDto "1" -- "1" PatientDto : + patient
+            RDVDto "1" -- "1" PraticienDto : + praticien
+            class CreateRDVDto{
+                + date : string
+                + status : string
+                + patient_id : string
+                + praticien_id : string
+            }
+            class CancelRDVDto{
+                + id : string
+            }
+        }
+    }
+
+    package "services"{
+        package "rdv"{
+            interface "RDVServiceInterface"{
+                + create(CreateRDVDto $rdv): RDVDto
+                + cancel(CancelRDVDto $rdv): RDVDto
+                + updateRDVStatus(UpdateRDVStatusDto $status): RDVDto
+                + getRDV(string $id): RDVDto
+                + getRDVs(): List<RDVDto>
+                + getRDVByPatient(string $patient_id): List<RDVDto>
+                + getRDVByPraticien(string $praticien_id): List<RDVDto>
+                + getRDVByDate(string $date): List<RDVDto>
+            }
+            class RDVService implements RDVServiceInterface{
+                + create(CreateRDVDto $rdv): RDVDto
+                + cancel(CancelRDVDto $rdv): RDVDto
+                + updateRDVStatus(UpdateRDVStatusDto $status): RDVDto
+                + getRDV(string $id): RDVDto
+                + getRDVs(): List<RDVDto>
+                + getRDVByPatient(string $patient_id): List<RDVDto>
+                + getRDVByPraticien(string $praticien_id): List<RDVDto>
+                + getRDVByDate(string $date): List<RDVDto>
+            }
+            RDVService <.. CreateRDVDto
+            RDVService <.. CancelRDVDto
+            RDVService <.. UpdateRDVStatusDto
+            RDVService <.. RDVDto
+            exception RDVAlreadyExistException{
+                + __construct(string $message)
+            }
+            exception RDVNotFoundException{
+                + __construct(string $message)
+            }
+            exception BadRDVStatusException{
+                + __construct(string $message)
+            }
+            RDVService <.. RDVAlreadyExistException
+            RDVService <.. RDVNotFoundException
+            RDVService <.. BadRDVStatusException
+        }
+        package "patient"{
+            interface "PatientServiceInterface"{
+                + create(CreatePatientDto $patient): PatientDto
+                + delete(DeletePatientDto $patient): PatientDto
+                + getPatient(string $id): PatientDto
+                + getPatients(): List<PatientDto>
+                + getPatientBySecurityNumber(string $securityNumber): PatientDto
+                + getPatientByPhone(string $phone): PatientDto
+                + getPatientByEmail(string $email): PatientDto
+                + getPatientByAddress(string $address): PatientDto
+                + getFolder(string $patient_id): PatientFolderDto
+            }
+            class PatientService implements PatientServiceInterface{
+                + create(CreatePatientDto $patient): PatientDto
+                + delete(DeletePatientDto $patient): PatientDto
+                + getPatient(string $id): PatientDto
+                + getPatients(): List<PatientDto>
+                + getPatientBySecurityNumber(string $securityNumber): PatientDto
+                + getPatientByPhone(string $phone): PatientDto
+                + getPatientByEmail(string $email): PatientDto
+                + getPatientByAddress(string $address): PatientDto
+                + getFolder(string $patient_id): PatientFolderDto
+            }
+            PatientService <..CreatePatientDto
+            PatientService <..DeletePatientDto
+            PatientService <..PatientDto
+            PatientService <..PatientFolderDto
+            exception PatientAlreadyExistException{
+                + __construct(string $message)
+            }
+            exception PatientNotFoundException{
+                + __construct(string $message)
+            }
+            exception PatientFolderNotFoundException{
+                + __construct(string $message)
+            }
+            exception DocumentNotFoundException{
+                + __construct(string $message)
+            }
+            PatientService <.. PatientAlreadyExistException
+            PatientService <.. PatientNotFoundException
+            PatientService <.. PatientFolderNotFoundException
+            PatientService <.. DocumentNotFoundException
+        }
+        package "praticien"{
+            interface "PraticienServiceInterface"{
+                + create(CreatePraticienDto $praticien): PraticienDto
+                + delete(DeletePraticienDto $praticien): PraticienDto
+                + getPraticien(string $id): PraticienDto
+                + getPraticiens(): List<PraticienDto>
+                + getPraticienBySpeciality(string $speciality_id): List<PraticienDto>
+                + getPraticienByPlace(string $place_id): List<PraticienDto>
+                + getPraticienByRPPS(string $rpps): PraticienDto
+                + getAgenda(string $praticien_id): AgendaDto
+
+            }
+            class PraticienService implements PraticienServiceInterface{
+                + create(CreatePraticienDto $praticien): PraticienDto
+                + delete(DeletePraticienDto $praticien): PraticienDto
+                + getPraticien(string $id): PraticienDto
+                + getPraticiens(): List<PraticienDto>
+                + getPraticienBySpeciality(string $speciality_id): List<PraticienDto>
+                + getPraticienByPlace(string $place_id): List<PraticienDto>
+                + getPraticienByRPPS(string $rpps): PraticienDto
+                + getAgenda(string $praticien_id): AgendaDto
+            }
+            PraticienService <..CreatePatientDto
+            PraticienService <..DeletePatientDto
+            PraticienService <..PraticienDto
+            PraticienService <..AgendaDto
+
+            exception PraticienAlreadyExistException{
+                + __construct(string $message)
+            }
+            exception PraticienNotFoundException{
+                + __construct(string $message)
+            }
+            exception SpecialityNotFoundException{
+                + __construct(string $message)
+            }
+            exception PlaceNotFoundException{
+                + __construct(string $message)
+            }
+            exception AgendaNotFoundException{
+                + __construct(string $message)
+            }
+            exception PraticienSpecialityNotFoundException{
+                + __construct(string $message)
+            }
+            PraticienService <.. PraticienAlreadyExistException
+            PraticienService <.. PraticienNotFoundException
+            PraticienService <.. SpecialityNotFoundException
+            PraticienService <.. PlaceNotFoundException
+            PraticienService <.. AgendaNotFoundException
+            PraticienService <.. PraticienSpecialityNotFoundException
+        }
+    }
+
+    package "interfaces" {
+        interface "NotificationServiceInterface"{
+            + notifyClient(string $user_id, string $message): bool
+        }
+        interface "LoggerServiceInterface"{
+            + save(string $rdv_id, string $message): bool
+        }
+    }
+}
+
+package "infrastructure" {
+    package "adapters" {
+        class "PHPMailerEmailNotificationAdapter"{
+            - PHPMailer $mailer
+            + __construct(PHPMailer $mailer)
+            + notifyClient(string $user_id, string $message): bool
+        }
+        class "FileSaveInLogAdapter"{
+            - string $path
+            + __construct(string $path)
+            + save(string $rdv_id, string $message): bool
+        }
+
+    }
+
+    "PHPMailerEmailNotificationAdapter" ..up|> "NotificationServiceInterface"
+    "FileSaveInLogAdapter" ..up|> "LoggerServiceInterface"
+}
+"LoggerServiceInterface" ..> "RDVService"
+"NotificationServiceInterface" ..> "RDVService"
+
+
+@enduml
