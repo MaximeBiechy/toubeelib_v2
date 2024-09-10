@@ -13,10 +13,10 @@ class ServiceRDV implements ServiceRDVInterface
     private ArrayPraticienRepository $praticienRepository;
     private ArrayRDVRepository $rdvRepository;
 
-    public function __construct()
+    public function __construct(ArrayPraticienRepository $praticienRepository, ArrayRDVRepository $rdvRepository)
     {
-        $this->praticienRepository = new ArrayPraticienRepository();
-        $this->rdvRepository = new ArrayRdvRepository();
+        $this->praticienRepository = $praticienRepository;
+        $this->rdvRepository = $rdvRepository;
     }
 
     public function creerRendezvous(CreateRDVDto $createRDVDTO): RDVDto

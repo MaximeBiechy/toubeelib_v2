@@ -39,11 +39,4 @@ class ArrayRdvRepository implements RdvRepositoryInterface
         return $this->rdvs[$id];
     }
 
-    public function cancelRDV(string $id): void
-    {
-        if (!isset($this->rdvs[$id])) {
-            throw new RepositoryEntityNotFoundException("Rendez-vous not found");
-        }
-        $this->rdvs[$id]->setStatut('annulé');
-    }
 }

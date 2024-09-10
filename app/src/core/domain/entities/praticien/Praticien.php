@@ -12,7 +12,6 @@ class Praticien extends Entity
     protected string $adresse;
     protected string $tel;
     protected ?Specialite $specialite = null; // version simplifiée : une seule spécialité
-    protected array $rdvs = [];
 
     public function __construct(string $nom, string $prenom, string $adresse, string $tel)
     {
