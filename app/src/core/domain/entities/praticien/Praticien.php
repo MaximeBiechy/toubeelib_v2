@@ -31,4 +31,9 @@ class Praticien extends Entity
     {
         return new PraticienDTO($this);
     }
+
+    public function getSpecialite(): string
+    {
+        return $this->specialite->label;
+    }
 }
