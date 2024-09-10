@@ -9,6 +9,5 @@ interface RdvRepositoryInterface
 {
     public function saveRDV(RendezVous $rdv): string;
     public function getRDVById(string $id): RendezVous;
-    public function cancelRDV(string $id): void;
 
 }

@@ -25,10 +25,14 @@ class ArrayRdvRepository implements RdvRepositoryInterface
 
     public function saveRDV(RendezVous $rdv): string
     {
-        $id = Uuid::uuid4()->toString();
-        $rdv->setID($id);
-        $this->rdvs[$id] = $rdv;
-        return $id;
+        if ($rdv->getId() !== null && isset($this->rdvs[$rdv->getId()])) {
+            $this->rdvs[$rdv->getId()] = $rdv;
+        }else{
+            $id = Uuid::uuid4()->toString();
+            $rdv->setID($id);
+            $this->rdvs[$id] = $rdv;
+        }
+        return $rdv->getId();
     }
 
     public function getRDVById(string $id): RendezVous
