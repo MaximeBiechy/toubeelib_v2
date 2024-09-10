@@ -49,6 +49,34 @@ class ServiceRDV implements ServiceRDVInterface
         return new RDVDto($rendezVous);
     }
 
+    public function consultingRDV(string $id):RDVDto{
+        try{
+            //On réucpère le rdv via son id :
+            $rdv = $this->rdvRepository->getRDVById($id);
+            
+            //On récupère la date :
+            $rdv_date = $rdv->$date;
+
+
+            //Informations à récupérer :
+            // $this->id = null;
+            // $this->date = $date;
+            // $this->praticienID = $praticienID;
+            // $this->patientID = $patientID;
+            // $this->speciality = $speciality;
+            // $this->statut = self::STATUT_PREVU;
+
+            // $rdvDTO = $rdv->toDTO();
+
+
+            return new RDVDto($rdv);    
+
+        }
+        catch{
+            throw new RDVNotFoundException('Rendez-vous non-trouvé.');
+        }
+    }
+
     public function getRDVByPraticienId(string $praticienID): array
     {
         return [];
