@@ -26,7 +26,7 @@ class ServiceRDV implements ServiceRDVInterface
             throw new RDVPraticienNotFoundException();
         }
 
-        $specialitePraticien = $this->praticienRepository->getPraticienById($createRDVDTO->praticien_id); // ! Récupère la spécialité du praticien;
+        $specialitePraticien = $this->praticienRepository->getPraticienById($createRDVDTO->praticien_id)->getSpecialite(); // ! Récupère la spécialité du praticien;
         // ! Vérifie si la spécialité du praticien correspond à la spécialité du rendez-vous demandé
         if ($createRDVDTO->specialiteDM != $specialitePraticien) {
             throw new RDVSpecialitePraticienDifferentException();
@@ -42,7 +42,7 @@ class ServiceRDV implements ServiceRDVInterface
             }
         }
 
-        $rendezVous = new RendezVous($createRDVDTO->praticienID, $createRDVDTO->patientID, $createRDVDTO->date); // ! Crée le rendez-vous
+        $rendezVous = new RendezVous($createRDVDTO->praticienID, $createRDVDTO->patientID, $specialitePraticien, $createRDVDTO->date); // ! Crée le rendez-vous
 
         $this->rdvRepository->saveRDV($rendezVous); // ! Enregistre le rendez-vous
 
