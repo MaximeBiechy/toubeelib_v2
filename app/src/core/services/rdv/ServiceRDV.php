@@ -44,6 +44,8 @@ class ServiceRDV implements ServiceRDVInterface
 
         $rendezVous = new RendezVous($createRDVDTO->praticienID, $createRDVDTO->patientID, $createRDVDTO->date); // ! Crée le rendez-vous
 
+        $this->rdvRepository->saveRDV($rendezVous); // ! Enregistre le rendez-vous
+
         return new RDVDto($rendezVous);
     }
 
