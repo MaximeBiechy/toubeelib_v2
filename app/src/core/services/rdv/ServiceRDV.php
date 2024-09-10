@@ -2,18 +2,18 @@
 
 namespace toubeelib\core\services\rdv;
 
-use toubeelib\core\domain\entities\praticien\Specialite;
+use toubeelib\core\domain\entities\rdv\RendezVous;
 use toubeelib\core\dto\rdv\CreateRDVDTO;
 use toubeelib\core\dto\rdv\RDVDto;
-use toubeelib\infrastructure\repositories\ArrayPraticienRepository;
-use toubeelib\infrastructure\repositories\ArrayRdvRepository;
+use toubeelib\core\repositoryInterfaces\PraticienRepositoryInterface;
+use toubeelib\core\repositoryInterfaces\RdvRepositoryInterface;
 
 class ServiceRDV implements ServiceRDVInterface
 {
-    private ArrayPraticienRepository $praticienRepository;
-    private ArrayRDVRepository $rdvRepository;
+    private PraticienRepositoryInterface $praticienRepository;
+    private RdvRepositoryInterface $rdvRepository;
 
-    public function __construct(ArrayPraticienRepository $praticienRepository, ArrayRDVRepository $rdvRepository)
+    public function __construct(PraticienRepositoryInterface $praticienRepository, RdvRepositoryInterface $rdvRepository)
     {
         $this->praticienRepository = $praticienRepository;
         $this->rdvRepository = $rdvRepository;
@@ -33,6 +33,22 @@ class ServiceRDV implements ServiceRDVInterface
         }
 
         // ! Vérifie que le praticien est disponible à la date et à l'heure demandées
+        $rdvs = $this->getRDVByPraticienId($createRDVDTO->praticienID);
+        if ($rdvs != null) {
+            foreach ($rdvs as $rdv) {
+                if ($rdv->getDate() == $createRDVDTO->date) {
+                    throw new RDVPraticienNotAvailableException();
+                }
+            }
+        }
 
+        $rendezVous = new RendezVous($createRDVDTO->praticienID, $createRDVDTO->patientID, $createRDVDTO->date); // ! Crée le rendez-vous
+
+        return new RDVDto($rendezVous);
+    }
+
+    public function getRDVByPraticienId(string $praticienID): array
+    {
+        return [];
     }
 }
