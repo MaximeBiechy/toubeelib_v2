@@ -22,5 +22,28 @@ class ArrayRdvRepository implements RdvRepositoryInterface
         $this->rdvs  = ['r1'=> $r1, 'r2'=>$r2, 'r3'=> $r3 ];
     }
 
-  
+
+    public function saveRDV(RendezVous $rdv): string
+    {
+        $id = Uuid::uuid4()->toString();
+        $rdv->setID($id);
+        $this->rdvs[$id] = $rdv;
+        return $id;
+    }
+
+    public function getRDVById(string $id): RendezVous
+    {
+        if (!isset($this->rdvs[$id])) {
+            throw new RepositoryEntityNotFoundException("Rendez-vous not found");
+        }
+        return $this->rdvs[$id];
+    }
+
+    public function cancelRDV(string $id): void
+    {
+        if (!isset($this->rdvs[$id])) {
+            throw new RepositoryEntityNotFoundException("Rendez-vous not found");
+        }
+        $this->rdvs[$id]->setStatut('annulé');
+    }
 }
