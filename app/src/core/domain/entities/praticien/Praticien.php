@@ -3,7 +3,7 @@
 namespace toubeelib\core\domain\entities\praticien;
 
 use toubeelib\core\domain\entities\Entity;
-use toubeelib\core\dto\PraticienDTO;
+use toubeelib\core\dto\praticien\PraticienDTO;
 
 class Praticien extends Entity
 {
@@ -12,6 +12,7 @@ class Praticien extends Entity
     protected string $adresse;
     protected string $tel;
     protected ?Specialite $specialite = null; // version simplifiée : une seule spécialité
+    protected array $rdvs = [];
 
     public function __construct(string $nom, string $prenom, string $adresse, string $tel)
     {

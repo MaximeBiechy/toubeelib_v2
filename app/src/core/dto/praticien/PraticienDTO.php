@@ -1,6 +1,6 @@
 <?php
 
-namespace toubeelib\core\dto;
+namespace toubeelib\core\dto\praticien;
 
 use toubeelib\core\domain\entities\praticien\Praticien;
 use toubeelib\core\dto\DTO;
@@ -23,6 +23,4 @@ class PraticienDTO extends DTO
         $this->tel = $p->tel;
         $this->specialite_label = $p->specialite->label;
     }
-
-
 }

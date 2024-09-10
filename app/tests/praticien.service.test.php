@@ -4,8 +4,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $service = new toubeelib\core\services\praticien\ServicePraticien(new \toubeelib\infrastructure\repositories\ArrayPraticienRepository());
 
-$pdto = new \toubeelib\core\dto\InputPraticienDTO('néplin', 'jean', 'vandeuve', '06 07 08 09 11', 'A');
-$pdto2 = new \toubeelib\core\dto\InputPraticienDTO('némar', 'jean', 'lassou', '06 07 08 09 12', 'B');
+$pdto = new \toubeelib\core\dto\praticien\InputPraticienDTO('néplin', 'jean', 'vandeuve', '06 07 08 09 11', 'A');
+$pdto2 = new \toubeelib\core\dto\praticien\InputPraticienDTO('némar', 'jean', 'lassou', '06 07 08 09 12', 'B');
 
 $pe1 = $service->createPraticien($pdto);
 print_r($pe1);
@@ -24,7 +24,7 @@ try {
     echo $e->getMessage(). PHP_EOL;
 }
 
-$pdto3 = new \toubeelib\core\dto\InputPraticienDTO('némar', 'jean', 'lassou', '06 07 08 09 12', 'Z');
+$pdto3 = new \toubeelib\core\dto\praticien\InputPraticienDTO('némar', 'jean', 'lassou', '06 07 08 09 12', 'Z');
 try {
     $pe2 = $service->createPraticien($pdto3);
 } catch (\toubeelib\core\services\praticien\ServicePraticienInvalidDataException $e) {

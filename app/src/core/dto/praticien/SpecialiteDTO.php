@@ -1,6 +1,6 @@
 <?php
 
-namespace toubeelib\core\dto;
+namespace toubeelib\core\dto\praticien;
 
 use toubeelib\core\dto\DTO;
 

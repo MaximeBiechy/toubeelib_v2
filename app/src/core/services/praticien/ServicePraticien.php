@@ -2,11 +2,9 @@
 
 namespace toubeelib\core\services\praticien;
 
-use Respect\Validation\Exceptions\NestedValidationException;
-use toubeelib\core\domain\entities\praticien\Praticien;
-use toubeelib\core\dto\InputPraticienDTO;
-use toubeelib\core\dto\PraticienDTO;
-use toubeelib\core\dto\SpecialiteDTO;
+use toubeelib\core\dto\praticien\InputPraticienDTO;
+use toubeelib\core\dto\praticien\PraticienDTO;
+use toubeelib\core\dto\praticien\SpecialiteDTO;
 use toubeelib\core\repositoryInterfaces\PraticienRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RepositoryEntityNotFoundException;
 
