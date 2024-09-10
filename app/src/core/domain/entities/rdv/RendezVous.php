@@ -11,18 +11,17 @@ class RendezVous extends Entity
     protected string $id;
     protected \DateTimeImmutable $date;
     protected int $duree;
-    protected Patient $patient;
+    protected string $patientID;
     protected string $praticienID;
     protected string $statut;
 
-    public function __construct(string $id, \DateTimeImmutable $date, int $duree, Patient $patient, string $praticienID, string $statut)
+    public function __construct(string $praticienID, string $patientID, \DateTimeImmutable $date)
     {
-        $this->id = $id;
+        $this->id = uniqid();
         $this->date = $date;
-        $this->duree = $duree;
-        $this->patient = $patient;
         $this->praticienID = $praticienID;
-        $this->statut = $statut;
+        $this->patientID = $patientID;
+        $this->statut = "en attente";
     }
 
     public function getId(): string
@@ -42,7 +41,7 @@ class RendezVous extends Entity
 
     public function getPatientID(): string
     {
-        return $this->patient->getID();
+        return $this->patientID;
     }
 
     public function getPraticienID(): string
