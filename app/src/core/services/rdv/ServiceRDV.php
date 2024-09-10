@@ -53,4 +53,12 @@ class ServiceRDV implements ServiceRDVInterface
     {
         return [];
     }
+
+    public function annulerRendezvous(string $id): void
+    {
+        $rdv = $this->rdvRepository->getRDVById($id);
+        $rdv->annuler();
+        $this->rdvRepository->saveRDV($rdv);
+
+    }
 }

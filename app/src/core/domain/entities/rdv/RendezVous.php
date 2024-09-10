@@ -81,4 +81,9 @@ class RendezVous extends Entity
         $this->statut = self::STATUT_NON_HONORE;
     }
 
+    public function getSpeciality(): string
+    {
+        return $this->speciality;
+    }
+
 }
