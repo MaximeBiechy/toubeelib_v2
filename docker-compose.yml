@@ -1,8 +1,5 @@
+version: '3.8'
 
-networks:
-  toubeelib.net:
-    driver: bridge
-	
 services:
 
   # service api.toubeelib : api pour la prise de rdv
@@ -44,3 +41,6 @@ services:
     networks:
       - toubeelib.net
 
+networks:
+  toubeelib.net:
+    driver: bridge
