@@ -17,14 +17,16 @@ class RendezVous extends Entity
     protected int $duree;
     protected string $patientID;
     protected string $praticienID;
+    protected string $speciality;
     protected string $statut;
 
-    public function __construct(string $praticienID, string $patientID, \DateTimeImmutable $date)
+    public function __construct(string $praticienID, string $patientID, string $speciality, \DateTimeImmutable $date)
     {
         $this->id = null;
         $this->date = $date;
         $this->praticienID = $praticienID;
         $this->patientID = $patientID;
+        $this->speciality = $speciality;
         $this->statut = self::STATUT_PREVU;
     }
 
