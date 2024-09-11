@@ -42,11 +42,11 @@ class ServiceRDV implements ServiceRDVInterface
             }
         }
 
-        $rendezVous = new RendezVous($createRDVDTO->praticienID, $createRDVDTO->patientID, $specialitePraticien, $createRDVDTO->date, $praticien); // ! Crée le rendez-vous
+        $rendezVous = new RendezVous($createRDVDTO->praticienID, $createRDVDTO->patientID, $specialitePraticien, $createRDVDTO->date); // ! Crée le rendez-vous
 
         $this->rdvRepository->saveRDV($rendezVous); // ! Enregistre le rendez-vous
 
-        return new RDVDto($rendezVous);
+        return new RDVDto($rendezVous, $praticien);
     }
 
     public function getRDVByPraticienId(string $praticienID): array
