@@ -1,8 +1,8 @@
 <?php
 
-namespace toubeelib\core\services\rdv;
+namespace toubeelib\core\services\rendez_vous;
 
-class RDVPraticienNotAvailableException extends \Exception
+class RendezVousPraticienNotAvailableException extends \Exception
 {
 
     public function __construct($message = "Le praticien n'est pas disponible à la date et à l'heure demandées")

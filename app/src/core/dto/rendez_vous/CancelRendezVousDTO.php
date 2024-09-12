@@ -1,10 +1,10 @@
 <?php
 
-namespace toubeelib\core\dto\rdv;
+namespace toubeelib\core\dto\rendez_vous;
 
 use toubeelib\core\dto\DTO;
 
-class CancelRDVDto extends DTO
+class CancelRendezVousDTO extends DTO
 {
     protected string $id;
 

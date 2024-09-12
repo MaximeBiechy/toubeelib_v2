@@ -2,12 +2,12 @@
 
 namespace toubeelib\core\repositoryInterfaces;
 
-use toubeelib\core\domain\entities\rdv\RendezVous;
-use toubeelib\core\dto\rdv\CreateRDVDto;
+use toubeelib\core\domain\entities\rendez_vous\RendezVous;
 
-interface RdvRepositoryInterface
+interface RendezVousRepositoryInterface
 {
     public function saveRDV(RendezVous $rdv): string;
     public function getRDVById(string $id): RendezVous;
+    public function getRDVByPraticienId(string $praticienId): array;
 
 }

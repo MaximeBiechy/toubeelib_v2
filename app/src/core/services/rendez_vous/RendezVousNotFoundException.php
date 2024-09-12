@@ -2,7 +2,7 @@
 
 namespace toubeelib\core\repositoryInterfaces;
 
-class RDVNotFoundException extends \Exception
+class RendezVousNotFoundException extends \Exception
 {
 
 }

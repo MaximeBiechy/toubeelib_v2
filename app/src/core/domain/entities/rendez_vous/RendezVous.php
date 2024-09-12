@@ -1,10 +1,8 @@
 <?php
 
-namespace toubeelib\core\domain\entities\rdv;
+namespace toubeelib\core\domain\entities\rendez_vous;
 
 use toubeelib\core\domain\entities\Entity;
-use toubeelib\core\domain\entities\patient\Patient;
-use toubeelib\core\domain\entities\praticien\Praticien;
 
 class RendezVous extends Entity
 {
@@ -50,6 +48,11 @@ class RendezVous extends Entity
         return $this->patientID;
     }
 
+    public function setPatientID(string $patientID): void
+    {
+        $this->patientID = $patientID;
+    }
+
     public function getPraticienID(): string
     {
         return $this->praticienID;
@@ -84,6 +87,11 @@ class RendezVous extends Entity
     public function getSpeciality(): string
     {
         return $this->speciality;
+    }
+
+    public function setSpeciality(string $speciality): void
+    {
+        $this->speciality = $speciality;
     }
 
 }

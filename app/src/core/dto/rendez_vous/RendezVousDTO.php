@@ -1,12 +1,12 @@
 <?php
 
-namespace toubeelib\core\dto\rdv;
+namespace toubeelib\core\dto\rendez_vous;
 
 use toubeelib\core\domain\entities\praticien\Praticien;
-use toubeelib\core\domain\entities\rdv\RendezVous;
+use toubeelib\core\domain\entities\rendez_vous\RendezVous;
 use toubeelib\core\dto\DTO;
 
-class RDVDto extends DTO
+class RendezVousDTO extends DTO
 {
     protected string $id;
     protected \DateTimeImmutable $date;

@@ -1,8 +1,8 @@
 <?php
 
-namespace toubeelib\core\services\rdv;
+namespace toubeelib\core\services\rendez_vous;
 
-class RDVPraticienNotFoundException extends \Exception
+class RendezVousPraticienNotFoundException extends \Exception
 {
     public function __construct($message = "Praticien non trouvé")
     {
