@@ -5,6 +5,7 @@ namespace toubeelib\application\actions;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
+use Slim\Routing\RouteContext;
 use toubeelib\application\renderer\JsonRenderer;
 use toubeelib\core\services\rendez_vous\RendezVousNotFoundException;
 use toubeelib\core\services\rendez_vous\RendezVousServiceInterface;
@@ -22,17 +23,21 @@ class ConsultingRendezVousAction extends AbstractAction
     {
         try{
             $rdvId = $args['ID-RDV'];
-
+            $routeContext = RouteContext::fromRequest($rq);
+            $routeParser = $routeContext->getRouteParser();
             $rdv = $this->rendezVousService->consultingRendezVous($rdvId);
+            $urlPraticien = $routeParser->urlFor('praticien', ['ID-PRATICIEN' => $rdv->praticienID]);
+            $urlPatient = $routeParser->urlFor('patient', ['ID-PATIENT' => $rdv->patientID]);
+            $urlRDV = $routeParser->urlFor('rendez_vous', ['ID-RDV' => $rdv->id]);
 
             $response = [
                 "type" => "resource",
                 "locale" => "fr-FR",
                 "rendez_vous" => $rdv,
                 "links" => [
-                    "self" => "/rdvs/" . $rdv->id,
-                    "praticien" => "/praticiens/" . $rdv->praticienID,
-                    "patient" => "/patients/" . $rdv->patientID
+                    "self" => $urlRDV,
+                    "praticien" => $urlPraticien,
+                    "patient" => $urlPatient
                 ]
 
             ];
