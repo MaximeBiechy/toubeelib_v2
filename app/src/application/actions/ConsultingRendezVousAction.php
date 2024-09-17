@@ -28,12 +28,7 @@ class ConsultingRendezVousAction extends AbstractAction
             $response = [
                 "type" => "resource",
                 "locale" => "fr-FR",
-                "rendez_vous" => [
-                    "id" => $rdv->id,
-                    "date" => $rdv->date->format('Y-m-d H:i:s'),
-                    "duree" => $rdv->duree,
-                    "speciality" => $rdv->speciality,
-                ],
+                "rendez_vous" => $rdv,
                 "links" => [
                     "self" => "/rdvs/" . $rdv->id,
                     "praticien" => "/praticiens/" . $rdv->praticienID,
