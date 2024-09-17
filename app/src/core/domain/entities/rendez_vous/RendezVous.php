@@ -10,9 +10,8 @@ class RendezVous extends Entity
     private const STATUT_REALISE = "R";
     private const STATUT_NON_HONORE = "NH";
     private const STATUT_ANNULE = "A";
-    protected ?string $id;
     protected \DateTimeImmutable $date;
-    protected int $duree;
+    protected int $duree = 30;
     protected string $patientID;
     protected string $praticienID;
     protected string $speciality;

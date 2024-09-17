@@ -1,6 +1,6 @@
 <?php
 
-namespace toubeelib\core\repositoryInterfaces;
+namespace toubeelib\core\services\rendez_vous;
 
 class RendezVousNotFoundException extends \Exception
 {

@@ -11,11 +11,10 @@ use toubeelib\core\dto\rendez_vous\RendezVousDTO;
 use toubeelib\core\dto\rendez_vous\UpdatePatientRendezVousDTO;
 use toubeelib\core\dto\rendez_vous\UpdateSpecialityRendezVousDTO;
 use toubeelib\core\repositoryInterfaces\PraticienRepositoryInterface;
-use toubeelib\core\repositoryInterfaces\RendezVousNotFoundException;
 use toubeelib\core\repositoryInterfaces\RendezVousRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RepositoryEntityNotFoundException;
 
-class RendezVousRendezVousService implements RendezVousServiceInterface
+class RendezVousService implements RendezVousServiceInterface
 {
     private PraticienRepositoryInterface $praticienRepository;
     private RendezVousRepositoryInterface $rdvRepository;
@@ -55,18 +54,17 @@ class RendezVousRendezVousService implements RendezVousServiceInterface
 
         $this->rdvRepository->saveRDV($rendezVous); // ! Enregistre le rendez-vous
 
-        return new RendezVousDTO($rendezVous, $praticien);
+        return new RendezVousDTO($rendezVous);
     }
 
     public function consultingRendezVous(string $id): RendezVousDTO
     {
         try {
             $rdv = $this->rdvRepository->getRDVById($id);
-            $praticien = $this->praticienRepository->getPraticienById($rdv->praticienID);
-            return new RendezVousDTO($rdv, $praticien);
+            return new RendezVousDTO($rdv);
 
         } catch (RepositoryEntityNotFoundException $e) {
-            throw new RendezVousNotFoundException();
+            throw new RendezVousNotFoundException('rdv not found');
         }
 
     }

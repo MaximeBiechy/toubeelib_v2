@@ -23,7 +23,7 @@ class RendezVousServiceTest extends \PHPUnit\Framework\TestCase
 
     public function testGetDisponibilityPraticienRDV()
     {
-        $service = new toubeelib\core\services\rendez_vous\RendezVousRendezVousService(new \toubeelib\infrastructure\repositories\ArrayPraticienRepository(), new \toubeelib\infrastructure\repositories\ArrayRendezVousRepository(), new \Slim\Logger());
+        $service = new toubeelib\core\services\rendez_vous\RendezVousService(new \toubeelib\infrastructure\repositories\ArrayPraticienRepository(), new \toubeelib\infrastructure\repositories\ArrayRendezVousRepository(), new \Slim\Logger());
         $dto = new \toubeelib\core\dto\rendez_vous\DisponibilityPraticienRendezVousDTO('p1', new \DateTimeImmutable('2024-09-02 08:00'), new \DateTimeImmutable('2024-09-03 08:00'), 30);
         $rep = $service->getDisponibilityPraticienRendezVous($dto);
         $this->assertEquals(16, count($rep));

@@ -5,7 +5,7 @@ namespace toubeelib\core\domain\entities;
 abstract class Entity
 {
 
-    protected ?string $ID=null;
+    protected ?string $id=null;
     public function __get(string $name): mixed
     {
         return property_exists($this, $name) ? $this->$name : throw new \Exception(static::class . ": Property $name does not exist");
@@ -13,12 +13,12 @@ abstract class Entity
 
     public function setID(string $ID): void
     {
-        $this->ID = $ID;
+        $this->id = $ID;
     }
 
     public function getID(): ?string
     {
-        return $this->ID;
+        return $this->id;
     }
 
 }
