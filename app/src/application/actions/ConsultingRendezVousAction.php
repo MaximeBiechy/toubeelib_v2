@@ -29,15 +29,14 @@ class ConsultingRendezVousAction extends AbstractAction
             $urlPraticien = $routeParser->urlFor('praticien', ['ID-PRATICIEN' => $rdv->praticienID]);
             $urlPatient = $routeParser->urlFor('patient', ['ID-PATIENT' => $rdv->patientID]);
             $urlRDV = $routeParser->urlFor('rendez_vous', ['ID-RDV' => $rdv->id]);
-
             $response = [
                 "type" => "resource",
                 "locale" => "fr-FR",
                 "rendez_vous" => $rdv,
                 "links" => [
-                    "self" => $urlRDV,
-                    "praticien" => $urlPraticien,
-                    "patient" => $urlPatient
+                    "self" => ['href' => $urlRDV] ,
+                    "praticien" => ['href' => $urlPraticien],
+                    "patient" => ['href' => $urlPatient]
                 ]
 
             ];
