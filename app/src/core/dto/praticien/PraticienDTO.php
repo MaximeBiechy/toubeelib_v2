@@ -7,7 +7,7 @@ use toubeelib\core\dto\DTO;
 
 class PraticienDTO extends DTO
 {
-    protected string $ID;
+    protected string $id;
     protected string $nom;
     protected string $prenom;
     protected string $adresse;
@@ -16,7 +16,7 @@ class PraticienDTO extends DTO
 
     public function __construct(Praticien $p)
     {
-        $this->ID = $p->getID();
+        $this->id = $p->getID();
         $this->nom = $p->nom;
         $this->prenom = $p->prenom;
         $this->adresse = $p->adresse;

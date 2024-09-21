@@ -68,11 +68,15 @@ class ArrayPraticienRepository implements PraticienRepositoryInterface
 
     public function save(Praticien $praticien): string
     {
-        // TODO : prévoir le cas d'une mise à jour - le praticient possède déjà un ID
-        $ID = Uuid::uuid4()->toString();
-        $praticien->setID($ID);
-        $this->praticiens[$ID] = $praticien;
-        return $ID;
+        if ($praticien->getID() !== null && isset($this->praticiens[$praticien->getID()])) {
+            $this->praticiens[$praticien->getID()] = $praticien;
+
+        }else{
+            $ID = Uuid::uuid4()->toString();
+            $praticien->setID($ID);
+            $this->praticiens[$ID] = $praticien;
+        }
+        return $praticien->getID();
     }
 
     public function getPraticienById(string $id): Praticien
