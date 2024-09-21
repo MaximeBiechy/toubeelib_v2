@@ -6,24 +6,17 @@ use toubeelib\core\domain\entities\Entity;
 
 class Patient extends Entity
 {
-    protected ?string $ID;
     protected string $nom;
     protected string $prenom;
     protected string $adresse;
     protected string $tel;
 
-    public function __construct(string $ID, string $nom, string $prenom, string $adresse, string $tel)
+    public function __construct(string $nom, string $prenom, string $adresse, string $tel)
     {
-        $this->ID = $ID;
         $this->nom = $nom;
         $this->prenom = $prenom;
         $this->adresse = $adresse;
         $this->tel = $tel;
-    }
-
-    public function getID(): string
-    {
-        return $this->ID;
     }
 
     public function getNom(): string
