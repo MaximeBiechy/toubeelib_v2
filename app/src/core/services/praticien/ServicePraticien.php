@@ -2,6 +2,7 @@
 
 namespace toubeelib\core\services\praticien;
 
+use toubeelib\core\domain\entities\praticien\Praticien;
 use toubeelib\core\dto\praticien\InputPraticienDTO;
 use toubeelib\core\dto\praticien\PraticienDTO;
 use toubeelib\core\dto\praticien\SpecialiteDTO;
@@ -19,10 +20,16 @@ class ServicePraticien implements ServicePraticienInterface
 
     public function createPraticien(InputPraticienDTO $p): PraticienDTO
     {
-        // TODO : valider les données et créer l'entité
-        return new PraticienDTO($praticien);
+        try{
+            $praticien = new Praticien($p->nom, $p->prenom, $p->adresse, $p->tel);
+            $specialite = $this->praticienRepository->getSpecialiteById($p->specialite);
 
-
+            $praticien->setSpecialite($specialite);
+            $this->praticienRepository->save($praticien);
+        }catch (RepositoryEntityNotFoundException $e) {
+            throw new ServicePraticienInvalidDataException('invalid Specialite ID');
+        }
+        return $praticien->toDTO();
     }
 
     public function getPraticienById(string $id): PraticienDTO
