@@ -26,9 +26,9 @@ class ConsultingRendezVousAction extends AbstractAction
             $routeContext = RouteContext::fromRequest($rq);
             $routeParser = $routeContext->getRouteParser();
             $rdv = $this->rendezVousService->consultingRendezVous($rdvId);
-            $urlPraticien = $routeParser->urlFor('praticien', ['ID-PRATICIEN' => $rdv->praticienID]);
-            $urlPatient = $routeParser->urlFor('patient', ['ID-PATIENT' => $rdv->patientID]);
-            $urlRDV = $routeParser->urlFor('rendez_vous', ['ID-RDV' => $rdv->id]);
+            $urlPraticien = $routeParser->urlFor('praticien_id', ['ID-PRATICIEN' => $rdv->praticienID]);
+            $urlPatient = $routeParser->urlFor('patient_id', ['ID-PATIENT' => $rdv->patientID]);
+            $urlRDV = $routeParser->urlFor('rendez_vous_id', ['ID-RDV' => $rdv->id]);
             $response = [
                 "type" => "resource",
                 "locale" => "fr-FR",

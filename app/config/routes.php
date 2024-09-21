@@ -10,9 +10,9 @@ use toubeelib\application\actions\ConsultingRendezVousAction;
 return function( \Slim\App $app):\Slim\App {
 
     $app->get('/', \toubeelib\application\actions\HomeAction::class);
-    $app->get('/rdvs/{ID-RDV}', ConsultingRendezVousAction::class)->setName('rendez_vous');
-    $app->get('/praticiens/{ID-PRATICIEN}', ConsultingPraticienAction::class)->setName('praticien');
-    $app->get('/patients/{ID-PATIENT}', ConsultingPatientAction::class)->setName('patient');
+    $app->get('/rdvs/{ID-RDV}', ConsultingRendezVousAction::class)->setName('rendez_vous_id');
+    $app->get('/praticiens/{ID-PRATICIEN}', ConsultingPraticienAction::class)->setName('praticien_id');
+    $app->get('/patients/{ID-PATIENT}', ConsultingPatientAction::class)->setName('patient_id');
 
 
     return $app;
