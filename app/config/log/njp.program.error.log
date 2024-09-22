@@ -1,0 +1,5 @@
+[2024-09-22T08:59:59.667908+00:00] njp.program.log.INFO: RDV patient updated {"id":"r1","patientID":"pa2"} []
+[2024-09-22T09:05:06.896040+00:00] njp.program.log.INFO: RDV patient updated {"id":"r1","patientID":"pa1"} []
+[2024-09-22T09:05:10.621970+00:00] njp.program.log.INFO: RDV patient updated {"id":"r1","patientID":"pa1"} []
+[2024-09-22T09:05:14.151969+00:00] njp.program.log.INFO: RDV patient updated {"id":"r1","patientID":"pa2"} []
+[2024-09-22T09:08:47.888796+00:00] njp.program.log.INFO: RDV speciality updated {"id":"r1","speciality":"B"} []

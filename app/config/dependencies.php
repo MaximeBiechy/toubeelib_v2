@@ -4,6 +4,7 @@
 use Psr\Container\ContainerInterface;
 use toubeelib\application\actions\ConsultingPraticienAction;
 use toubeelib\application\actions\ConsultingRendezVousAction;
+use toubeelib\application\actions\UpdateRendezVousAction;
 use toubeelib\core\repositoryInterfaces\PatientRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\PraticienRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RendezVousRepositoryInterface;
@@ -50,6 +51,7 @@ return [
         return new RendezVousService(
             $c->get(PraticienRepositoryInterface::class),
             $c->get(RendezVousRepositoryInterface::class),
+            $c->get(PatientRepositoryInterface::class),
             $c->get('prog.logger')
         );
     },
@@ -62,6 +64,12 @@ return [
     ConsultingPraticienAction::class => function (ContainerInterface $c) {
         return new ConsultingPraticienAction(
             $c->get(ServicePraticienInterface::class)
+        );
+    },
+
+    UpdateRendezVousAction::class => function (ContainerInterface $c) {
+        return new UpdateRendezVousAction(
+            $c->get(RendezVousServiceInterface::class)
         );
     },
 

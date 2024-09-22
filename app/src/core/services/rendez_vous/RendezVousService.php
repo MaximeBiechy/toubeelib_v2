@@ -10,6 +10,7 @@ use toubeelib\core\dto\rendez_vous\DisponibilityPraticienRendezVousDTO;
 use toubeelib\core\dto\rendez_vous\RendezVousDTO;
 use toubeelib\core\dto\rendez_vous\UpdatePatientRendezVousDTO;
 use toubeelib\core\dto\rendez_vous\UpdateSpecialityRendezVousDTO;
+use toubeelib\core\repositoryInterfaces\PatientRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\PraticienRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RendezVousRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RepositoryEntityNotFoundException;
@@ -18,12 +19,15 @@ class RendezVousService implements RendezVousServiceInterface
 {
     private PraticienRepositoryInterface $praticienRepository;
     private RendezVousRepositoryInterface $rdvRepository;
+
+    private PatientRepositoryInterface $patientRepository;
     private LoggerInterface $logger;
 
-    public function __construct(PraticienRepositoryInterface $praticienRepository, RendezVousRepositoryInterface $rdvRepository, LoggerInterface $logger)
+    public function __construct(PraticienRepositoryInterface $praticienRepository, RendezVousRepositoryInterface $rdvRepository, PatientRepositoryInterface $patientRepository,LoggerInterface $logger)
     {
         $this->praticienRepository = $praticienRepository;
         $this->rdvRepository = $rdvRepository;
+        $this->patientRepository = $patientRepository;
         $this->logger = $logger;
     }
 
@@ -86,11 +90,12 @@ class RendezVousService implements RendezVousServiceInterface
     {
         try {
             $rdv = $this->rdvRepository->getRDVById($dto->id);
+            $speciality = $this->praticienRepository->getSpecialiteById($dto->speciality);
             $rdv->setSpeciality($dto->speciality);
             $this->rdvRepository->saveRDV($rdv);
             $this->logger->info('RDV speciality updated', ['id' => $dto->id, 'speciality' => $dto->speciality]);
         } catch (RepositoryEntityNotFoundException $e) {
-            throw new RendezVousNotFoundException();
+            throw new RendezVousNotFoundException($e->getMessage());
         }
 
     }
@@ -99,11 +104,12 @@ class RendezVousService implements RendezVousServiceInterface
     {
         try {
             $rdv = $this->rdvRepository->getRDVById($dto->id);
+            $this->patientRepository->getPatientById($dto->patientID);
             $rdv->setPatientID($dto->patientID);
             $this->rdvRepository->saveRDV($rdv);
             $this->logger->info('RDV patient updated', ['id' => $dto->id, 'patientID' => $dto->patientID]);
         } catch (RepositoryEntityNotFoundException $e) {
-            throw new RendezVousNotFoundException();
+            throw new RendezVousNotFoundException($e->getMessage());
         }
     }
 
