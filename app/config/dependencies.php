@@ -2,6 +2,7 @@
 
 
 use Psr\Container\ContainerInterface;
+use toubeelib\application\actions\ConsultingPatientAction;
 use toubeelib\application\actions\ConsultingPraticienAction;
 use toubeelib\application\actions\ConsultingRendezVousAction;
 use toubeelib\application\actions\UpdateRendezVousAction;
@@ -19,6 +20,8 @@ use toubeelib\infrastructure\repositories\ArrayPraticienRepository;
 use toubeelib\infrastructure\repositories\ArrayRendezVousRepository;
 
 return [
+
+    // Logger
     'log.prog.level' => \Monolog\Level::Debug,
     'log.prog.name' => 'njp.program.log',
     'log.prog.file' => __DIR__ . '/log/njp.program.error.log',
@@ -30,6 +33,8 @@ return [
                 $c->get('log.prog.level')));
         return $logger;
     },
+
+    // Repositories
     PraticienRepositoryInterface::class => function (ContainerInterface $c) {
         return new ArrayPraticienRepository();
     },
@@ -39,6 +44,8 @@ return [
     RendezVousRepositoryInterface::class => function (ContainerInterface $c) {
         return new ArrayRendezVousRepository();
     },
+
+    // Services
     ServicePraticienInterface::class => function (ContainerInterface $c) {
         return new ServicePraticien($c->get(PraticienRepositoryInterface::class));
     },
@@ -55,18 +62,23 @@ return [
             $c->get('prog.logger')
         );
     },
+
+    // Actions
     ConsultingRendezVousAction::class => function (ContainerInterface $c) {
         return new ConsultingRendezVousAction(
             $c->get(RendezVousServiceInterface::class)
         );
     },
-
     ConsultingPraticienAction::class => function (ContainerInterface $c) {
         return new ConsultingPraticienAction(
             $c->get(ServicePraticienInterface::class)
         );
     },
-
+    ConsultingPatientAction::class => function (ContainerInterface $c) {
+        return new ConsultingPatientAction(
+            $c->get(PatientServiceInterface::class)
+        );
+    },
     UpdateRendezVousAction::class => function (ContainerInterface $c) {
         return new UpdateRendezVousAction(
             $c->get(RendezVousServiceInterface::class)
