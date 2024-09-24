@@ -74,13 +74,13 @@ class RendezVousService implements RendezVousServiceInterface
     }
 
 
-    public function annulerRendezvous(CancelRendezVousDTO $cancelRendezVousDTO): void
+    public function annulerRendezvous(string $id): void
     {
         try {
-            $rdv = $this->rdvRepository->getRDVById($cancelRendezVousDTO->id);
+            $rdv = $this->rdvRepository->getRDVById($id);
             $rdv->annuler();
             $this->rdvRepository->saveRDV($rdv);
-            $this->logger->info('RDV cancelled', ['id' => $cancelRendezVousDTO->id]);
+            $this->logger->info('RDV cancelled', ['id' => $id]);
         } catch (RepositoryEntityNotFoundException $e) {
             throw new RendezVousNotFoundException();
         }

@@ -15,7 +15,7 @@ interface RendezVousServiceInterface
 
     public function consultingRendezVous(string $id): RendezVousDTO;
 
-    public function annulerRendezvous(CancelRendezVousDTO $cancelRendezVousDTO): void;
+    public function annulerRendezvous(string $id): void;
 
     public function getDisponibilityPraticienRendezVous(DisponibilityPraticienRendezVousDTO $disponibilityPraticienRDVDto): array;
 
