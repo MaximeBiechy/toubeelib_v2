@@ -22,7 +22,6 @@ class ArrayRendezVousRepository implements RendezVousRepositoryInterface
         $this->rdvs  = ['r1'=> $r1, 'r2'=>$r2, 'r3'=> $r3 ];
     }
 
-
     public function saveRDV(RendezVous $rdv): string
     {
         if ($rdv->getID() !== null && isset($this->rdvs[$rdv->getID()])) {

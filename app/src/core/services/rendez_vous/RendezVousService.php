@@ -88,28 +88,37 @@ class RendezVousService implements RendezVousServiceInterface
 
     public function updateSpecialityRendezVous(UpdateSpecialityRendezVousDTO $dto): void
     {
-        try {
+        try{
             $rdv = $this->rdvRepository->getRDVById($dto->id);
+        }catch (RepositoryEntityNotFoundException $e){
+            throw new RendezVousNotFoundException();
+        }
+        try {
+
             $speciality = $this->praticienRepository->getSpecialiteById($dto->speciality);
             $rdv->setSpeciality($dto->speciality);
             $this->rdvRepository->saveRDV($rdv);
             $this->logger->info('RDV speciality updated', ['id' => $dto->id, 'speciality' => $dto->speciality]);
         } catch (RepositoryEntityNotFoundException $e) {
-            throw new RendezVousNotFoundException($e->getMessage());
+            throw new RendezVousBadDataException($e->getMessage());
         }
 
     }
 
     public function updatePatientRendezVous(UpdatePatientRendezVousDTO $dto): void
     {
-        try {
+        try{
             $rdv = $this->rdvRepository->getRDVById($dto->id);
+        }catch (RepositoryEntityNotFoundException $e){
+            throw new RendezVousNotFoundException();
+        }
+        try {
             $this->patientRepository->getPatientById($dto->patientID);
             $rdv->setPatientID($dto->patientID);
             $this->rdvRepository->saveRDV($rdv);
             $this->logger->info('RDV patient updated', ['id' => $dto->id, 'patientID' => $dto->patientID]);
         } catch (RepositoryEntityNotFoundException $e) {
-            throw new RendezVousNotFoundException($e->getMessage());
+            throw new RendezVousBadDataException($e->getMessage());
         }
     }
 

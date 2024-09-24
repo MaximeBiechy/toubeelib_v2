@@ -4,12 +4,15 @@ namespace toubeelib\application\actions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Respect\Validation\Exceptions\NestedValidationException;
+use Respect\Validation\Validator;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Routing\RouteContext;
 use toubeelib\application\renderer\JsonRenderer;
 use toubeelib\core\dto\rendez_vous\UpdatePatientRendezVousDTO;
 use toubeelib\core\dto\rendez_vous\UpdateSpecialityRendezVousDTO;
+use toubeelib\core\services\rendez_vous\RendezVousBadDataException;
 use toubeelib\core\services\rendez_vous\RendezVousNotFoundException;
 use toubeelib\core\services\rendez_vous\RendezVousServiceInterface;
 
@@ -27,17 +30,36 @@ class UpdateRendezVousAction extends AbstractAction
         try {
             $id = $args['ID-RDV'];
             $data = $rq->getParsedBody();
-            if (isset($data['speciality'])){
-                $dto = new UpdateSpecialityRendezVousDTO($id,$data['speciality']);
-                $this->rendezVousServiceInterface->updateSpecialityRendezVous($dto);
-            } elseif (isset($data['patientID'])){
-                $dto = new UpdatePatientRendezVousDTO($id,$data['patientID']);
-                $this->rendezVousServiceInterface->updatePatientRendezVous($dto);
-            } else {
+            $placeInputValidator = Validator::key('speciality', Validator::optional(Validator::stringType()->notEmpty()))
+            ->key('patientID', Validator::optional(Validator::stringType()->notEmpty()));
+            try{
+                $placeInputValidator->assert($data);
+            } catch (NestedValidationException $e) {
                 throw new HttpBadRequestException($rq, 'Invalid request');
             }
 
-        }catch (RendezVousNotFoundException $e){
+
+            if (isset($data['speciality'])){
+                if ((filter_var($data['speciality'],
+                        FILTER_SANITIZE_FULL_SPECIAL_CHARS)!== $data['speciality'])
+                ) {
+                    throw new HttpBadRequestException($rq, 'Bad data format speciality');
+                }
+                $dto = new UpdateSpecialityRendezVousDTO($id,$data['speciality']);
+                $this->rendezVousServiceInterface->updateSpecialityRendezVous($dto);
+            }
+            if (isset($data['patientID']) ){
+                if ((filter_var($data['patientID'],
+                        FILTER_SANITIZE_FULL_SPECIAL_CHARS)!== $data['patientID'])
+                ) {
+                    throw new HttpBadRequestException($rq, 'Bad data format patientID');
+                }
+                $dto = new UpdatePatientRendezVousDTO($id,$data['patientID']);
+                $this->rendezVousServiceInterface->updatePatientRendezVous($dto);
+            }
+        }catch (RendezVousBadDataException $e){
+            throw new HttpBadRequestException($rq, $e->getMessage());
+        } catch (RendezVousNotFoundException $e) {
             throw new HttpNotFoundException($rq, $e->getMessage());
         }
 
@@ -54,7 +76,8 @@ class UpdateRendezVousAction extends AbstractAction
             "links" => [
                 "self" => ['href' => $urlRDV] ,
                 "praticien" => ['href' => $urlPraticien],
-                "patient" => ['href' => $urlPatient]
+                "patient" => ['href' => $urlPatient],
+                "update" => ['href' => $urlRDV, 'method' => 'PATCH']
             ]
 
         ];
