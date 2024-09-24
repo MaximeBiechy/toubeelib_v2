@@ -30,12 +30,12 @@ class UpdateRendezVousAction extends AbstractAction
         try {
             $id = $args['ID-RDV'];
             $data = $rq->getParsedBody();
-            $placeInputValidator = Validator::key('speciality', Validator::optional(Validator::stringType()->notEmpty()))
-            ->key('patientID', Validator::optional(Validator::stringType()->notEmpty()));
+            $placeInputValidator = Validator::key('speciality', Validator::stringType()->notEmpty(), false)
+            ->key('patientID', Validator::stringType()->notEmpty(), false);
             try{
                 $placeInputValidator->assert($data);
             } catch (NestedValidationException $e) {
-                throw new HttpBadRequestException($rq, 'Invalid request');
+                throw new HttpBadRequestException($rq, $e->getFullMessage());
             }
 
 
