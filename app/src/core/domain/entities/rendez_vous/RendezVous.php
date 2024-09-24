@@ -27,10 +27,6 @@ class RendezVous extends Entity
         $this->statut = self::STATUT_PREVU;
     }
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
 
     public function getDate(): \DateTimeImmutable
     {

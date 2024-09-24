@@ -34,7 +34,7 @@ class Praticien extends Entity
 
     public function getSpecialite(): string
     {
-        return $this->specialite->label;
+        return $this->specialite->id;
     }
 
     public function getNom(): string

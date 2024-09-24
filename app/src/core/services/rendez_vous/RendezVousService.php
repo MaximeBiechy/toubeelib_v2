@@ -41,7 +41,7 @@ class RendezVousService implements RendezVousServiceInterface
         $specialitePraticien = $praticien->getSpecialite(); // ! Récupère la spécialité du praticien;
         // ! Vérifie si la spécialité du praticien correspond à la spécialité du rendez-vous demandé
         if ($createRDVDTO->specialiteDM != $specialitePraticien) {
-            throw new RendezVousSpecialitePraticienDifferentException();
+            throw new RendezVousSpecialitePraticienDifferentException($createRDVDTO->specialiteDM . '!=' . $specialitePraticien);
         }
 
         // ! Vérifie que le praticien est disponible à la date et à l'heure demandées

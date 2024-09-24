@@ -21,7 +21,6 @@ class CreateRendezVousAction extends AbstractAction{
 
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args) : ResponseInterface{
         try{
-            $rdvId = $args['ID-RDV'];
             $routeContext = RouteContext::fromRequest($rq);
             $routeParser = $routeContext->getRouteParser();
 
