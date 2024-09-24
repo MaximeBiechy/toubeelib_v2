@@ -14,7 +14,7 @@ class CreateRendezVousAction extends AbstractAction{
 
     private RendezVousServiceInterface $rendezVousServiceInterface;
 
-    public function __construct(RendezVousServiceInterface $rendezVousService)
+    public function __construct(RendezVousServiceInterface $rendezVousService){
         $this->rendezVousServiceInterface = $rendezVousService;
     }
 
@@ -29,23 +29,21 @@ class CreateRendezVousAction extends AbstractAction{
             // $urlPatient = $routeParser->urlFor('patient_id', ['ID-PATIENT' => $rdv->patientID]);
             // $urlRDV = $routeParser->urlFor('rendez_vous_id', ['ID-RDV' => $rdv->id]);
 
-            $rdv = $this->rendezVousServiceInterface->createRendezVous();
+            $rdv = $this->rendezVousServiceInterface->creerRendezvous();
 
             $response = [
                 "type" => "resource",
                 "locale" => "fr-FR",
                 "rendez_vous" => $rdv,
-            ]
-
-            $rq->headers->set('Location', $rdv->getId());
+            ];
 
 
 
-            return JsonRenderer::render($rs, 201, $response)
+
+            return JsonRenderer::render($rs, 201, $response);
         }
-        catch{
+        catch(\Exception $e){
             throw new HttpNotFoundException($rq, $e->getMessage());
         }
     }
-
-?>
+}

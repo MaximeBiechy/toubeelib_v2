@@ -6,6 +6,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use toubeelib\application\actions\ConsultingPatientAction;
 use toubeelib\application\actions\ConsultingPraticienAction;
 use toubeelib\application\actions\ConsultingRendezVousAction;
+use toubeelib\application\actions\CreateRendezVousAction;
 use toubeelib\application\actions\HomeAction;
 use toubeelib\application\actions\UpdateRendezVousAction;
 
