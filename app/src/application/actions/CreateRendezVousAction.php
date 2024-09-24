@@ -28,22 +28,18 @@ class CreateRendezVousAction extends AbstractAction{
             // $urlPatient = $routeParser->urlFor('patient_id', ['ID-PATIENT' => $rdv->patientID]);
             // $urlRDV = $routeParser->urlFor('rendez_vous_id', ['ID-RDV' => $rdv->id]);
 
-            $rdv = $this->rendezVousServiceInterface->creerRendezvous();
+            $data = $rq->getParsedBody();
+            $dto = new \toubeelib\core\dto\rendez_vous\CreateRendezVousDTO($data["date"], $data["duree"], $data["praticienID"], $data["patientID"], $data["specialiteDM"]);
+
+            $rdv = $this->rendezVousServiceInterface->creerRendezvous($dto);
             
             //Namespace CreateRendezVousDTO : toubeelib\core\dto\rendez_vous
 
             $response = [
                 "type" => "resource",
                 "locale" => "fr-FR",
-                "id" => $rdv->id,
-                "date" => $rdv->date,
-                "duree" => $rdv->duree,
-                "praticienID" => $rdv->praticienID,
-                "patientID" => $rdv->patientID,
-                "specialiteDM" => $rdv->specialiteDM,
+                "rdv" => $rdv
             ];
-
-            $rq->withHeader('Location', $rdv->id)
 
             return JsonRenderer::render($rs, 201, $response);
         }
