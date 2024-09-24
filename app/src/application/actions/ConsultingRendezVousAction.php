@@ -38,7 +38,6 @@ class ConsultingRendezVousAction extends AbstractAction
                     "praticien" => ['href' => $urlPraticien],
                     "patient" => ['href' => $urlPatient]
                 ]
-
             ];
             return JsonRenderer::render($rs, 200, $response);
 
