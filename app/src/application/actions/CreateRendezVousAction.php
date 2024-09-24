@@ -8,6 +8,7 @@ use Slim\Exception\HttpNotFoundException;
 use Slim\Routing\RouteContext;
 use toubeelib\application\renderer\JsonRenderer;
 use toubeelib\core\services\rendez_vous\RendezVousNotFoundException;
+use toubeelib\core\services\rendez_vous\RendezVousPraticienNotFoundException;
 use toubeelib\core\services\rendez_vous\RendezVousServiceInterface;
 
 class CreateRendezVousAction extends AbstractAction{
@@ -43,7 +44,7 @@ class CreateRendezVousAction extends AbstractAction{
 
             return JsonRenderer::render($rs, 201, $response);
         }
-        catch(\Exception $e){
+        catch( RendezVousPraticienNotFoundException $e){
             throw new HttpNotFoundException($rq, $e->getMessage());
         }
     }

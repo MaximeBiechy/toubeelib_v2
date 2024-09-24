@@ -20,7 +20,7 @@ class RendezVous extends Entity
     public function __construct(string $praticienID, string $patientID, string $speciality, string $date)
     {
         $this->id = null;
-        $this->date = new \DateTimeImmutable::createFromFormat('Y-m-d H:i', $date);
+        $this->date = \DateTimeImmutable::createFromFormat('Y-m-d H:i', $date);
         $this->praticienID = $praticienID;
         $this->patientID = $patientID;
         $this->speciality = $speciality;
