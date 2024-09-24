@@ -17,6 +17,7 @@ return function( \Slim\App $app):\Slim\App {
     // Les rendez-vous
     $app->get('/rdvs/{ID-RDV}', ConsultingRendezVousAction::class)->setName('rendez_vous_id');
     $app->patch('/rdvs/{ID-RDV}', UpdateRendezVousAction::class)->setName('update_rendez_vous_id');
+    $app->post('/rdvs/{ID-RDV}', ConsultingRendezVousAction::class)->setName('create_rendez_vous_id');
 
     // Les praticiens
     $app->get('/praticiens/{ID-PRATICIEN}', ConsultingPraticienAction::class)->setName('praticien_id');
