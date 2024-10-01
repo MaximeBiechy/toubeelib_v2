@@ -2,6 +2,8 @@
 
 
 use Psr\Container\ContainerInterface;
+use toubeelib\application\actions\CancelRendezVousAction;
+use toubeelib\application\actions\ConsultingPraticienDisponibilitiesAction;
 use toubeelib\application\actions\CreateRendezVousAction;
 use toubeelib\application\actions\ConsultingPatientAction;
 use toubeelib\application\actions\ConsultingPraticienAction;
@@ -87,6 +89,16 @@ return [
     },
     UpdateRendezVousAction::class => function (ContainerInterface $c) {
         return new UpdateRendezVousAction(
+            $c->get(RendezVousServiceInterface::class)
+        );
+    },
+    CancelRendezVousAction::class => function (ContainerInterface $c) {
+        return new CancelRendezVousAction(
+            $c->get(RendezVousServiceInterface::class)
+        );
+    },
+    ConsultingPraticienDisponibilitiesAction::class => function (ContainerInterface $c) {
+        return new ConsultingPraticienDisponibilitiesAction(
             $c->get(RendezVousServiceInterface::class)
         );
     },

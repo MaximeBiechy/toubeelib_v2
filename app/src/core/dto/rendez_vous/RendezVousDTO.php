@@ -15,6 +15,7 @@ class RendezVousDTO extends DTO
     protected string $praticienID;
     protected string $speciality;
     protected string $patientID;
+    protected string $statut;
 
     public function __construct(RendezVous $rdv)
     {
@@ -24,6 +25,7 @@ class RendezVousDTO extends DTO
         $this->praticienID = $rdv->getPraticienID();
         $this->speciality = $rdv->getSpeciality();
         $this->patientID = $rdv->getPatientID();
+        $this->statut = $rdv->getStatut();
     }
 
 
