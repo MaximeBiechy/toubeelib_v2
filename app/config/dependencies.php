@@ -18,6 +18,9 @@ use toubeelib\core\services\praticien\ServicePraticien;
 use toubeelib\core\services\praticien\ServicePraticienInterface;
 use toubeelib\core\services\rendez_vous\RendezVousService;
 use toubeelib\core\services\rendez_vous\RendezVousServiceInterface;
+use toubeelib\infrastructure\db\PDOPatientRepository;
+use toubeelib\infrastructure\db\PDOPraticienRepository;
+use toubeelib\infrastructure\db\PDORendezVousRepository;
 use toubeelib\infrastructure\repositories\ArrayPatientRepository;
 use toubeelib\infrastructure\repositories\ArrayPraticienRepository;
 use toubeelib\infrastructure\repositories\ArrayRendezVousRepository;
@@ -28,7 +31,7 @@ return [
     'log.prog.level' => \Monolog\Level::Debug,
     'log.prog.name' => 'njp.program.log',
     'log.prog.file' => __DIR__ . '/log/njp.program.error.log',
-    'prog.logger' => function(ContainerInterface $c) {
+    'prog.logger' => function (ContainerInterface $c) {
         $logger = new \Monolog\Logger($c->get('log.prog.name'));
         $logger->pushHandler(
             new \Monolog\Handler\StreamHandler(
@@ -37,15 +40,31 @@ return [
         return $logger;
     },
 
+    'pdo_praticien' => function (ContainerInterface $c) {
+        $pdo_praticien = new PDO('postgres:host=toubeelib.db;dbname=toubee_praticien', 'root', 'root');
+        $pdo_praticien->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        return $pdo_praticien;
+    },
+    'pdo_patient' => function (ContainerInterface $c) {
+        $pdo_patient = new PDO('postgres:host=toubeelib.db;dbname=toubee_patient', 'root', 'root');
+        $pdo_patient->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        return $pdo_patient;
+    },
+    'pdo_rendez_vous' => function (ContainerInterface $c) {
+        $pdo_rendez_vous = new PDO('postgres:host=toubeelib.db;dbname=toubee_rdvs', 'root', 'root');
+        $pdo_rendez_vous->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        return $pdo_rendez_vous;
+    },
+
     // Repositories
     PraticienRepositoryInterface::class => function (ContainerInterface $c) {
-        return new ArrayPraticienRepository();
+        return new PDOPraticienRepository($c->get('pdo_praticien'));
     },
     PatientRepositoryInterface::class => function (ContainerInterface $c) {
-        return new ArrayPatientRepository();
+        return new PDOPatientRepository($c->get('pdo_patient'));
     },
     RendezVousRepositoryInterface::class => function (ContainerInterface $c) {
-        return new ArrayRendezVousRepository();
+        return new PDORendezVousRepository($c->get('pdo_rendez_vous'));
     },
 
     // Services
