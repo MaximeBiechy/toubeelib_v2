@@ -14,6 +14,7 @@ use toubeelib\core\repositoryInterfaces\PatientRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\PraticienRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RendezVousRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RepositoryEntityNotFoundException;
+use toubeelib\core\repositoryInterfaces\RepositoryInternalServerError;
 
 class RendezVousService implements RendezVousServiceInterface
 {
@@ -33,32 +34,38 @@ class RendezVousService implements RendezVousServiceInterface
 
     public function creerRendezvous(CreateRendezVousDTO $createRDVDTO): RendezVousDTO
     {
-        // ! Vérifie si le praticien existe
-        if ($createRDVDTO->praticienID == null) {
-            throw new RendezVousPraticienNotFoundException();
-        }
-        $praticien = $this->praticienRepository->getPraticienById($createRDVDTO->praticienID); // ! Récupère le praticien
-        $specialitePraticien = $praticien->getSpecialite(); // ! Récupère la spécialité du praticien;
-        // ! Vérifie si la spécialité du praticien correspond à la spécialité du rendez-vous demandé
-        if ($createRDVDTO->specialiteDM != $specialitePraticien) {
-            throw new RendezVousSpecialitePraticienDifferentException($createRDVDTO->specialiteDM . '!=' . $specialitePraticien);
-        }
+        try{
+            // ! Vérifie si le praticien existe
+            if ($createRDVDTO->praticienID == null) {
+                throw new RendezVousPraticienNotFoundException();
+            }
+            $praticien = $this->praticienRepository->getPraticienById($createRDVDTO->praticienID); // ! Récupère le praticien
+            $specialitePraticien = $praticien->getSpecialite(); // ! Récupère la spécialité du praticien;
+            // ! Vérifie si la spécialité du praticien correspond à la spécialité du rendez-vous demandé
+            if ($createRDVDTO->specialiteDM != $specialitePraticien) {
+                throw new RendezVousSpecialitePraticienDifferentException($createRDVDTO->specialiteDM . '!=' . $specialitePraticien);
+            }
 
-        // ! Vérifie que le praticien est disponible à la date et à l'heure demandées
-        $rdvs = $this->rdvRepository->getRDVByPraticienId($createRDVDTO->praticienID);
-        if ($rdvs != null) {
-            foreach ($rdvs as $rdv) {
-                if ($rdv->getDate() == $createRDVDTO->date) {
-                    throw new RendezVousPraticienNotAvailableException();
+            // ! Vérifie que le praticien est disponible à la date et à l'heure demandées
+            $rdvs = $this->rdvRepository->getRDVByPraticienId($createRDVDTO->praticienID);
+            if ($rdvs != null) {
+                foreach ($rdvs as $rdv) {
+                    if ($rdv->getDate() == $createRDVDTO->date) {
+                        throw new RendezVousPraticienNotAvailableException();
+                    }
                 }
             }
+
+            $rendezVous = new RendezVous($createRDVDTO->praticienID, $createRDVDTO->patientID, $specialitePraticien, $createRDVDTO->date); // ! Crée le rendez-vous
+
+            $this->rdvRepository->saveRDV($rendezVous); // ! Enregistre le rendez-vous
+
+            return new RendezVousDTO($rendezVous);
+        } catch (RepositoryEntityNotFoundException $e) {
+            throw new RendezVousBadDataException($e->getMessage());
+        } catch (RepositoryInternalServerError $e) {
+            throw new RendezVousInternalServerError( $e->getMessage());
         }
-
-        $rendezVous = new RendezVous($createRDVDTO->praticienID, $createRDVDTO->patientID, $specialitePraticien, $createRDVDTO->date); // ! Crée le rendez-vous
-
-        $this->rdvRepository->saveRDV($rendezVous); // ! Enregistre le rendez-vous
-
-        return new RendezVousDTO($rendezVous);
     }
 
     public function consultingRendezVous(string $id): RendezVousDTO
@@ -69,6 +76,8 @@ class RendezVousService implements RendezVousServiceInterface
 
         } catch (RepositoryEntityNotFoundException $e) {
             throw new RendezVousNotFoundException('rdv not found');
+        } catch (RepositoryInternalServerError $e) {
+            throw new RendezVousInternalServerError($e->getMessage());
         }
 
     }
@@ -83,6 +92,8 @@ class RendezVousService implements RendezVousServiceInterface
             $this->logger->info('RDV cancelled', ['id' => $id]);
         } catch (RepositoryEntityNotFoundException $e) {
             throw new RendezVousNotFoundException();
+        } catch (RepositoryInternalServerError $e) {
+            throw new RendezVousInternalServerError($e->getMessage());
         }
     }
 
@@ -101,6 +112,8 @@ class RendezVousService implements RendezVousServiceInterface
             $this->logger->info('RDV speciality updated', ['id' => $dto->id, 'speciality' => $dto->speciality]);
         } catch (RepositoryEntityNotFoundException $e) {
             throw new RendezVousBadDataException($e->getMessage());
+        } catch (RepositoryInternalServerError $e) {
+            throw new RendezVousInternalServerError($e->getMessage());
         }
 
     }
@@ -119,6 +132,8 @@ class RendezVousService implements RendezVousServiceInterface
             $this->logger->info('RDV patient updated', ['id' => $dto->id, 'patientID' => $dto->patientID]);
         } catch (RepositoryEntityNotFoundException $e) {
             throw new RendezVousBadDataException($e->getMessage());
+        } catch (RepositoryInternalServerError $e) {
+            throw new RendezVousInternalServerError($e->getMessage());
         }
     }
 
@@ -131,31 +146,40 @@ class RendezVousService implements RendezVousServiceInterface
             return $this->creerRendezvous($createRDVDto);
         } catch (RendezVousNotFoundException $e) {
             throw new RendezVousNotFoundException();
+        } catch (RendezVousInternalServerError $e) {
+            throw new RendezVousInternalServerError($e->getMessage());
         }
     }
 
     public function getDisponibilityPraticienRendezVous(DisponibilityPraticienRendezVousDTO $disponibilityPraticienRDVDto): array
     {
-        $rdvs = $this->rdvRepository->getRDVByPraticienId($disponibilityPraticienRDVDto->idPraticien);
-        $disponibility = [];
-        if ($disponibilityPraticienRDVDto->dateDebut > $disponibilityPraticienRDVDto->dateFin) {
-            throw new RendezVousBadDataException();
-        }
-        $date = $disponibilityPraticienRDVDto->dateDebut;
-        while ($date < $disponibilityPraticienRDVDto->dateFin) {
-            $isDispo = true;
-            foreach ($rdvs as $rdv) {
-                if ($rdv->getDate() == $date) {
-                    $isDispo = false;
-                    break;
+        try{
+            $rdvs = $this->rdvRepository->getRDVByPraticienId($disponibilityPraticienRDVDto->idPraticien);
+            $disponibility = [];
+            if ($disponibilityPraticienRDVDto->dateDebut > $disponibilityPraticienRDVDto->dateFin) {
+                throw new RendezVousBadDataException();
+            }
+            $date = $disponibilityPraticienRDVDto->dateDebut;
+            while ($date < $disponibilityPraticienRDVDto->dateFin) {
+                $isDispo = true;
+                foreach ($rdvs as $rdv) {
+                    if ($rdv->getDate() == $date) {
+                        $isDispo = false;
+                        break;
+                    }
                 }
+                if ($isDispo && $date->format('H') >= 9 && $date->format('H') < 18) {
+                    $disponibility[] = $date;
+                }
+                $date = $date->add(new \DateInterval('PT' . $disponibilityPraticienRDVDto->duree . 'M'));
             }
-            if ($isDispo && $date->format('H') >= 9 && $date->format('H') < 18) {
-                $disponibility[] = $date;
-            }
-            $date = $date->add(new \DateInterval('PT' . $disponibilityPraticienRDVDto->duree . 'M'));
+            return $disponibility;
+        } catch (RepositoryEntityNotFoundException $e) {
+            throw new RendezVousBadDataException($e->getMessage());
+        } catch (RepositoryInternalServerError $e) {
+            throw new RendezVousInternalServerError($e->getMessage());
         }
-        return $disponibility;
+
     }
 
 }

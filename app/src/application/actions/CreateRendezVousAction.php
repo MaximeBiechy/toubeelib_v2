@@ -7,10 +7,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Validator;
 use Slim\Exception\HttpBadRequestException;
+use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Routing\RouteContext;
 use toubeelib\application\renderer\JsonRenderer;
 use toubeelib\core\dto\rendez_vous\CreateRendezVousDTO;
+use toubeelib\core\services\rendez_vous\rendezVousInternalServerError;
 use toubeelib\core\services\rendez_vous\RendezVousNotFoundException;
 use toubeelib\core\services\rendez_vous\RendezVousPraticienNotFoundException;
 use toubeelib\core\services\rendez_vous\RendezVousServiceInterface;
@@ -76,6 +78,9 @@ class CreateRendezVousAction extends AbstractAction{
         }
         catch( RendezVousPraticienNotFoundException $e){
             throw new HttpNotFoundException($rq, $e->getMessage());
+        }
+        catch( RendezVousInternalServerError $e){
+            throw new HttpInternalServerErrorException($rq, $e->getMessage());
         }
     }
 }

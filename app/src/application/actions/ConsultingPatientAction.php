@@ -4,9 +4,11 @@ namespace toubeelib\application\actions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Routing\RouteContext;
 use toubeelib\application\renderer\JsonRenderer;
+use toubeelib\core\services\patient\ServicePatientInternalServerError;
 use toubeelib\core\services\patient\PatientService;
 use toubeelib\core\services\patient\PatientServiceInterface;
 use toubeelib\core\services\patient\ServicePatientInvalidDataException;
@@ -39,6 +41,8 @@ class ConsultingPatientAction extends AbstractAction
             return JsonRenderer::render($rs, 200, $response);
         }catch (ServicePatientInvalidDataException $e) {
             throw new HttpNotFoundException($rq, $e->getMessage());
+        }catch (ServicePatientInternalServerError $e) {
+            throw new HttpInternalServerErrorException($rq, $e->getMessage());
         }
     }
 }

@@ -4,11 +4,10 @@ namespace toubeelib\application\actions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Exception\HttpNotFoundException;
-use Slim\Routing\RouteContext;
-use toubeelib\application\actions\AbstractAction;
-use toubeelib\application\renderer\JsonRenderer;
-use toubeelib\core\repositoryInterfaces\RepositoryEntityNotFoundException;
+use toubeelib\core\services\rendez_vous\rendezVousInternalServerError;
+use toubeelib\core\services\rendez_vous\RendezVousNotFoundException;
 use toubeelib\core\services\rendez_vous\RendezVousServiceInterface;
 
 class CancelRendezVousAction extends AbstractAction
@@ -26,8 +25,10 @@ class CancelRendezVousAction extends AbstractAction
         try {
             $id = $args['ID-RDV'];
             $this->rendezVousServiceInterface->annulerRendezvous($id);
-        } catch (RepositoryEntityNotFoundException $e) {
+        } catch (RendezVousNotFoundException $e) {
             throw new HttpNotFoundException($rq, $e->getMessage());
+        } catch (RendezVousInternalServerError $e) {
+            throw new HttpInternalServerErrorException($rq, $e->getMessage());
         }
 
 

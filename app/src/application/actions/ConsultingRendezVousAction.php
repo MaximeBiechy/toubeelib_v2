@@ -4,9 +4,11 @@ namespace toubeelib\application\actions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Routing\RouteContext;
 use toubeelib\application\renderer\JsonRenderer;
+use toubeelib\core\services\rendez_vous\rendezVousInternalServerError;
 use toubeelib\core\services\rendez_vous\RendezVousNotFoundException;
 use toubeelib\core\services\rendez_vous\RendezVousServiceInterface;
 
@@ -43,6 +45,8 @@ class ConsultingRendezVousAction extends AbstractAction
 
         }catch (RendezVousNotFoundException $e) {
             throw new HttpNotFoundException($rq, $e->getMessage());
+        }catch (RendezVousInternalServerError $e) {
+            throw new HttpInternalServerErrorException($rq, $e->getMessage());
         }
 
     }

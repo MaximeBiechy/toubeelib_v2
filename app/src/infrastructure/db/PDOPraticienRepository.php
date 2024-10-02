@@ -2,9 +2,12 @@
 
 namespace toubeelib\infrastructure\db;
 
+use Ramsey\Uuid\Uuid;
 use toubeelib\core\domain\entities\praticien\Praticien;
 use toubeelib\core\domain\entities\praticien\Specialite;
 use toubeelib\core\repositoryInterfaces\PraticienRepositoryInterface;
+use toubeelib\core\repositoryInterfaces\RepositoryEntityNotFoundException;
+use toubeelib\core\repositoryInterfaces\RepositoryInternalServerError;
 
 class PDOPraticienRepository implements PraticienRepositoryInterface
 {
@@ -17,31 +20,60 @@ class PDOPraticienRepository implements PraticienRepositoryInterface
 
     public function getSpecialiteById(string $id): Specialite
     {
-        $query = $this->pdo->prepare('SELECT * FROM specialite WHERE id = :id');
-        $query->execute(['id' => $id]);
-        $specialite = $query->fetch();
-        return new Specialite($specialite['id'], $specialite['label'], $specialite['description']);
+        try {
+            $query = $this->pdo->prepare('SELECT * FROM specialite WHERE id = :id');
+            $query->execute(['id' => $id]);
+            $specialite = $query->fetch();
+            if ($specialite === false) {
+                throw new RepositoryEntityNotFoundException("Specialite not found");
+            }
+            return new Specialite($specialite['id'], $specialite['label'], $specialite['description']);
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalServerError("Error while fetching specialite");
+        }
+
     }
 
     public function save(Praticien $praticien): string
     {
-        $query = $this->pdo->prepare('INSERT INTO praticien (id, nom, prenom, adresse, telephone, specialite_id) VALUES (:id, :nom, :prenom, :adresse, :telephone, :specialite_id)');
-        $query->execute([
-            'id' => $praticien->getID(),
-            'nom' => $praticien->getNom(),
-            'prenom' => $praticien->getPrenom(),
-            'adresse' => $praticien->getAdresse(),
-            'telephone' => $praticien->getTel(),
-            'specialite_id' => $praticien->getSpecialite()
-        ]);
-        return $praticien->getID();
+        try{
+            if ($praticien->getID() !== null) {
+                $stmt = $this->pdo->prepare("UPDATE praticien SET nom = :nom, prenom = :prenom, adresse = :adresse, telephone = :telephone, specialite_id = :specialite_id WHERE id = :id");
+            }else{
+                $id = Uuid::uuid4()->toString();
+                $praticien->setID($id);
+                $stmt = $this->pdo->prepare("INSERT INTO praticien (id, nom, prenom, adresse, telephone, specialite_id) VALUES (:id, :nom, :prenom, :adresse, :telephone, :specialite_id)");
+            }
+            $stmt->execute([
+                'id' => $praticien->getID(),
+                'nom' => $praticien->getNom(),
+                'prenom' => $praticien->getPrenom(),
+                'adresse' => $praticien->getAdresse(),
+                'telephone' => $praticien->getTel(),
+                'specialite_id' => $praticien->getSpecialite()
+            ]);
+            return $praticien->getID();
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalServerError("Error while saving praticien");
+        }
     }
 
     public function getPraticienById(string $id): Praticien
     {
-        $query = $this->pdo->prepare('SELECT * FROM praticien WHERE id = :id');
-        $query->execute(['id' => $id]);
-        $praticien = $query->fetch();
-        return new Praticien($praticien['nom'], $praticien['prenom'], $praticien['adresse'], $praticien['telephone']);
+        try{
+            $query = $this->pdo->prepare('SELECT * FROM praticien WHERE id = :id');
+            $query->execute(['id' => $id]);
+            $praticien = $query->fetch();
+            if ($praticien === false) {
+                throw new RepositoryEntityNotFoundException("Praticien not found");
+            }
+            $p =  new Praticien($praticien['nom'], $praticien['prenom'], $praticien['adresse'], $praticien['telephone']);
+            $p->setID($praticien['id']);
+            $p->setSpecialite($this->getSpecialiteById($praticien['specialite_id']));
+            return $p;
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalServerError("Error while fetching praticien");
+        }
+
     }
 }

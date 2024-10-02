@@ -41,17 +41,17 @@ return [
     },
 
     'pdo_praticien' => function (ContainerInterface $c) {
-        $pdo_praticien = new PDO('postgres:host=toubeelib.db;dbname=toubee_praticien', 'root', 'root');
+        $pdo_praticien = new PDO('pgsql:host=toubeelib.db;dbname=toubee_praticien', 'root', 'root');
         $pdo_praticien->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         return $pdo_praticien;
     },
     'pdo_patient' => function (ContainerInterface $c) {
-        $pdo_patient = new PDO('postgres:host=toubeelib.db;dbname=toubee_patient', 'root', 'root');
+        $pdo_patient = new PDO('pgsql:host=toubeelib.db;dbname=toubee_patient', 'root', 'root');
         $pdo_patient->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         return $pdo_patient;
     },
     'pdo_rendez_vous' => function (ContainerInterface $c) {
-        $pdo_rendez_vous = new PDO('postgres:host=toubeelib.db;dbname=toubee_rdvs', 'root', 'root');
+        $pdo_rendez_vous = new PDO('pgsql:host=toubeelib.db;dbname=toubee_rdvs', 'root', 'root');
         $pdo_rendez_vous->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         return $pdo_rendez_vous;
     },

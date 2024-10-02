@@ -7,12 +7,14 @@ use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Validator;
 use Slim\Exception\HttpBadRequestException;
+use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Routing\RouteContext;
 use toubeelib\application\renderer\JsonRenderer;
 use toubeelib\core\dto\rendez_vous\UpdatePatientRendezVousDTO;
 use toubeelib\core\dto\rendez_vous\UpdateSpecialityRendezVousDTO;
 use toubeelib\core\services\rendez_vous\RendezVousBadDataException;
+use toubeelib\core\services\rendez_vous\rendezVousInternalServerError;
 use toubeelib\core\services\rendez_vous\RendezVousNotFoundException;
 use toubeelib\core\services\rendez_vous\RendezVousServiceInterface;
 
@@ -57,31 +59,34 @@ class UpdateRendezVousAction extends AbstractAction
                 $dto = new UpdatePatientRendezVousDTO($id,$data['patientID']);
                 $this->rendezVousServiceInterface->updatePatientRendezVous($dto);
             }
+            $routeContext = RouteContext::fromRequest($rq);
+            $routeParser = $routeContext->getRouteParser();
+            $rdv = $this->rendezVousServiceInterface->consultingRendezVous($id);
+            $urlPraticien = $routeParser->urlFor('praticien_id', ['ID-PRATICIEN' => $rdv->praticienID]);
+            $urlPatient = $routeParser->urlFor('patient_id', ['ID-PATIENT' => $rdv->patientID]);
+            $urlRDV = $routeParser->urlFor('rendez_vous_id', ['ID-RDV' => $rdv->id]);
+            $response = [
+                "type" => "resource",
+                "locale" => "fr-FR",
+                "rendez_vous" => $rdv,
+                "links" => [
+                    "self" => ['href' => $urlRDV] ,
+                    "praticien" => ['href' => $urlPraticien],
+                    "patient" => ['href' => $urlPatient],
+                    "update" => ['href' => $urlRDV, 'method' => 'PATCH']
+                ]
+
+            ];
+            return JsonRenderer::render($rs, 201, $response);
         }catch (RendezVousBadDataException $e){
             throw new HttpBadRequestException($rq, $e->getMessage());
         } catch (RendezVousNotFoundException $e) {
             throw new HttpNotFoundException($rq, $e->getMessage());
+        } catch (RendezVousInternalServerError $e) {
+            throw new HttpInternalServerErrorException($rq, $e->getMessage());
         }
 
-        $routeContext = RouteContext::fromRequest($rq);
-        $routeParser = $routeContext->getRouteParser();
-        $rdv = $this->rendezVousServiceInterface->consultingRendezVous($id);
-        $urlPraticien = $routeParser->urlFor('praticien_id', ['ID-PRATICIEN' => $rdv->praticienID]);
-        $urlPatient = $routeParser->urlFor('patient_id', ['ID-PATIENT' => $rdv->patientID]);
-        $urlRDV = $routeParser->urlFor('rendez_vous_id', ['ID-RDV' => $rdv->id]);
-        $response = [
-            "type" => "resource",
-            "locale" => "fr-FR",
-            "rendez_vous" => $rdv,
-            "links" => [
-                "self" => ['href' => $urlRDV] ,
-                "praticien" => ['href' => $urlPraticien],
-                "patient" => ['href' => $urlPatient],
-                "update" => ['href' => $urlRDV, 'method' => 'PATCH']
-            ]
 
-        ];
-        return JsonRenderer::render($rs, 201, $response);
 
 
     }

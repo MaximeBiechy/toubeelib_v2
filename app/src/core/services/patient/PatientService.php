@@ -7,6 +7,7 @@ use toubeelib\core\dto\patient\InputPatientDTO;
 use toubeelib\core\dto\patient\PatientDTO;
 use toubeelib\core\repositoryInterfaces\PatientRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RepositoryEntityNotFoundException;
+use toubeelib\core\repositoryInterfaces\RepositoryInternalServerError;
 
 class PatientService implements PatientServiceInterface
 {
@@ -19,10 +20,15 @@ class PatientService implements PatientServiceInterface
 
     public function createPatient(InputPatientDTO $p): PatientDTO
     {
-        $patient = new Patient($p->nom, $p->prenom, $p->adresse, $p->tel);
-        $this->patientRepository->save($patient);
+        try{
+            $patient = new Patient($p->nom, $p->prenom, $p->adresse, $p->tel);
+            $this->patientRepository->save($patient);
 
-        return new PatientDTO($patient);
+            return new PatientDTO($patient);
+        } catch (RepositoryInternalServerError $e) {
+            throw new ServicePatientInternalServerError($e->getMessage());
+        }
+
     }
 
     public function getPatientById(string $id): PatientDTO
@@ -32,6 +38,8 @@ class PatientService implements PatientServiceInterface
             return new PatientDTO($patient);
         } catch(RepositoryEntityNotFoundException $e) {
             throw new ServicePatientInvalidDataException('invalid Patient ID');
+        } catch(RepositoryInternalServerError $e) {
+            throw new ServicePatientInternalServerError($e->getMessage());
         }
 
     }
