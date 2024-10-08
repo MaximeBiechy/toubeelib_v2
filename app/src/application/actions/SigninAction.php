@@ -29,7 +29,7 @@ class SigninAction extends AbstractAction {
     }
 
     catch (AuthentificationServiceNotFoundException $e) {
-
+      return $rs->withStatus(401);
     }
   }
 }
