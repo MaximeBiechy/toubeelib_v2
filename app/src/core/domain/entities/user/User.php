@@ -8,11 +8,13 @@ class User extends Entity
 {
     private string $email;
     private string $password;
+    private int $role;
 
-    public function __construct(string $email, string $password)
+    public function __construct(string $email, string $password, int $role)
     {
         $this->email = $email;
         $this->password = $password;
+        $this->role = $role;
     }
 
     public function getEmail(): string
@@ -23,6 +25,11 @@ class User extends Entity
     public function getPassword(): string
     {
         return $this->password;
+    }
+
+    public function getRole(): int
+    {
+        return $this->role;
     }
 
 }
