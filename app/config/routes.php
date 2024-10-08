@@ -9,6 +9,7 @@ use toubeelib\application\actions\ConsultingPraticienAction;
 use toubeelib\application\actions\ConsultingPraticienDisponibilitiesAction;
 use toubeelib\application\actions\ConsultingRendezVousAction;
 use toubeelib\application\actions\CreateRendezVousAction;
+use toubeelib\application\actions\RefreshAction;
 use toubeelib\application\actions\UpdateRendezVousAction;
 
 return function( \Slim\App $app):\Slim\App {
@@ -23,18 +24,19 @@ return function( \Slim\App $app):\Slim\App {
     $app->get('/', \toubeelib\application\actions\HomeAction::class);
 
     // Les rendez-vous
-    $app->get('/rdvs/{ID-RDV}', ConsultingRendezVousAction::class)->setName('rendez_vous_id');
-    $app->post('/rdvs', CreateRendezVousAction::class)->setName('create_rendez_vous_id');
-    $app->patch('/rdvs/{ID-RDV}', UpdateRendezVousAction::class)->setName('update_rendez_vous_id');
-    $app->delete('/rdvs/{ID-RDV}', CancelRendezVousAction::class)->setName('cancel_rendez_vous_id'); // ! Route pour annuler un rendez-vous
+    $app->get('/rdvs/{ID-RDV}[/]', ConsultingRendezVousAction::class)->setName('rendez_vous_id');
+    $app->post('/rdvs[/]', CreateRendezVousAction::class)->setName('create_rendez_vous_id');
+    $app->patch('/rdvs/{ID-RDV}[/]', UpdateRendezVousAction::class)->setName('update_rendez_vous_id');
+    $app->delete('/rdvs/{ID-RDV}[/]', CancelRendezVousAction::class)->setName('cancel_rendez_vous_id'); // ! Route pour annuler un rendez-vous
 
     // Les praticiens
-    $app->get('/praticiens/{ID-PRATICIEN}', ConsultingPraticienAction::class)->setName('praticien_id');
-    $app->get('/praticiens/{ID-PRATICIEN}/disponibilites', ConsultingPraticienDisponibilitiesAction::class)->setName('praticien_id_disponibilites');
+    $app->get('/praticiens/{ID-PRATICIEN}[/]', ConsultingPraticienAction::class)->setName('praticien_id');
+    $app->get('/praticiens/{ID-PRATICIEN}/disponibilites[/]', ConsultingPraticienDisponibilitiesAction::class)->setName('praticien_id_disponibilites');
 
     // Les patients
-    $app->get('/patients/{ID-PATIENT}', ConsultingPatientAction::class)->setName('patient_id');
+    $app->get('/patients/{ID-PATIENT}[/]', ConsultingPatientAction::class)->setName('patient_id');
 
+    $app->get('/refresh[/]', RefreshAction::class)->setName('refresh');
 
     return $app;
 };
