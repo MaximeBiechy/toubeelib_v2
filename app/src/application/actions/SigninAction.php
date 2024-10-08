@@ -7,11 +7,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use toubeelib\core\dto\auth\CredentialsDTO;
 use toubeelib\core\services\auth\AuthentificationServiceInterface;use toubeelib\core\services\auth\AuthentificationServiceNotFoundException;
 
-class SigninAction{
+class SigninAction extends AbstractAction {
   private AuthentificationServiceInterface $authentificationServiceInterface;
 
-  public function __construct(AuthentificationServiceInterface $authentificationServiceInterface)
-  {
+  public function __construct(AuthentificationServiceInterface $authentificationServiceInterface){
     $this->authentificationServiceInterface = $authentificationServiceInterface;
   }
 
