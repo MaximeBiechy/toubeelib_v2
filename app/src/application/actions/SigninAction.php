@@ -4,14 +4,19 @@ namespace toubeelib\application\actions;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+use Slim\Exception\HttpBadRequestException;
+use Slim\Exception\HttpNotFoundException;
+use toubeelib\application\renderer\auth\AuthProviderInterface;
+use toubeelib\application\renderer\JsonRenderer;
 use toubeelib\core\dto\auth\CredentialsDTO;
-use toubeelib\core\services\auth\AuthentificationServiceInterface;use toubeelib\core\services\auth\AuthentificationServiceNotFoundException;
+use toubeelib\core\services\auth\AuthentificationServiceBadDataException;
+use toubeelib\core\services\auth\AuthentificationServiceNotFoundException;
 
 class SigninAction extends AbstractAction {
-  private AuthentificationServiceInterface $authentificationServiceInterface;
+  private AuthProviderInterface $authnProviderInterface;
 
-  public function __construct(AuthentificationServiceInterface $authentificationServiceInterface){
-    $this->authentificationServiceInterface = $authentificationServiceInterface;
+  public function __construct(AuthProviderInterface $authnProviderInterface){
+    $this->authnProviderInterface = $authnProviderInterface;
   }
 
   public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args): ResponseInterface{
@@ -21,15 +26,19 @@ class SigninAction extends AbstractAction {
       $email = $data["email"];
       $password = $data["password"];
 
+      //!: A changer par la suite :
       $credentialsDTO = new CredentialsDTO($email, $password);
 
-      $this->authentificationServiceInterface->byCredentials($credentialsDTO);
+      $this->authnProviderInterface->signin($email, $password);
 
-      return $rs->withStatus(201);
+      return JsonRenderer::render($rs, 201);
     }
 
     catch (AuthentificationServiceNotFoundException $e) {
-      return $rs->withStatus(401);
+      throw new HttpNotFoundException($rq, $e->getMessage());
+    }
+    catch(AuthentificationServiceBadDataException $e){
+      throw new HttpBadRequestException($rq, $e->getMessage());
     }
   }
 }
