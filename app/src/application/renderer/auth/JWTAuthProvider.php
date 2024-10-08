@@ -40,20 +40,10 @@ class JWTAuthProvider implements AuthProviderInterface
     public function isSignedIn(string $email): bool
     {
         // Check if the user is signed in (this can be done by checking the token validity)
-        return isset($this->users[$email]);
     }
 
     public function getSignedInUser(): array
     {
-        // Decode the JWT token to get the user information
-        $headers = apache_request_headers();
-        if (!isset($headers['Authorization'])) {
-            throw new \Exception('Authorization header not found');
-        }
 
-        $token = str_replace('Bearer ', '', $headers['Authorization']);
-        $decoded = JWT::decode($token, new Key($this->secretKey, 'HS256'));
-
-        return ['email' => $decoded->sub];
     }
 }
