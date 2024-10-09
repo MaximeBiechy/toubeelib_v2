@@ -12,32 +12,30 @@ use toubeelib\core\services\auth\AuthentificationServiceBadDataException;
 use toubeelib\core\services\auth\AuthentificationServiceNotFoundException;
 
 class SigninAction extends AbstractAction {
-  private AuthProviderInterface $authnProviderInterface;
+    private AuthProviderInterface $authnProviderInterface;
 
-  public function __construct(AuthProviderInterface $authnProviderInterface){
-    $this->authnProviderInterface = $authnProviderInterface;
-  }
-
-  public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args): ResponseInterface{
-
-    try {
-      $data = $rq->getParsedBody();
-      $email = $data["email"];
-      $password = $data["password"];
-
-      //!: A changer par la suite :
-      $credentialsDTO = new CredentialsDTO($email, $password);
-
-      $this->authnProviderInterface->signin($email, $password);
-
-      return JsonRenderer::render($rs, 201);
+    public function __construct(AuthProviderInterface $authnProviderInterface){
+        $this->authnProviderInterface = $authnProviderInterface;
     }
 
-    catch (AuthentificationServiceNotFoundException $e) {
-      throw new HttpNotFoundException($rq, $e->getMessage());
+    public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args): ResponseInterface{
+        $data = $rq->getParsedBody();
+        if (!isset($data['email']) || !isset($data['password'])) {
+            throw new HttpBadRequestException($rq, 'missing email or password');
+        }
+        $email = $data['email'];
+        $password = $data['password'];
+        try {
+            $authDTO = $this->authnProviderInterface->signin(new CredentialsDTO($email, $password));
+            $res = [
+                $authDTO->token,
+                $authDTO->refreshToken
+            ];
+            return JsonRenderer::render($rs, 201, $res);
+        } catch (AuthentificationServiceNotFoundException $e) {
+            throw new HttpNotFoundException($rq, $e->getMessage());
+        } catch (AuthentificationServiceBadDataException $e) {
+            throw new HttpBadRequestException($rq, $e->getMessage());
+        }
     }
-    catch(AuthentificationServiceBadDataException $e){
-      throw new HttpBadRequestException($rq, $e->getMessage());
-    }
-  }
 }

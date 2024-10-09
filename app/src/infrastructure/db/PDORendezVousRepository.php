@@ -77,4 +77,22 @@ class PDORendezVousRepository implements RendezVousRepositoryInterface
             throw new RepositoryInternalServerError("Error while fetching rendez-vous");
         }
     }
+
+    public function getRendezVousByPatientId(string $id)
+    {
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM rendez_vous WHERE patient_id = :patient_id");
+            $stmt->execute(['patient_id' => $id]);
+            $rdvs = $stmt->fetchAll();
+            $rdvsArray = [];
+            foreach ($rdvs as $rdv) {
+                $rdva = new RendezVous($rdv['praticien_id'], $rdv['patient_id'], $rdv['specialite_id'], $rdv['date']);
+                $rdva->setID($rdv['id']);
+                $rdvsArray[] = $rdva;
+            }
+            return $rdvsArray;
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalServerError("Error while fetching rendez-vous");
+        }
+    }
 }

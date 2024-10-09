@@ -28,7 +28,11 @@ class RefreshAction extends AbstractAction
             }
 
             $authDTO = $this->authProviderInterface->refresh($token);
-            return JsonRenderer::render($rs, 200, $authDTO);
+            $res = [
+                $authDTO->token,
+                $authDTO->refreshToken
+            ];
+            return JsonRenderer::render($rs, 201, $res);
         } catch (AuthentificationServiceInternalServerErrorException $e) {
             throw new HttpUnauthorizedException($rq, $e->getMessage());
         }

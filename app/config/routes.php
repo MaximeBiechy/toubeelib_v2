@@ -5,6 +5,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use toubeelib\application\actions\CancelRendezVousAction;
 use toubeelib\application\actions\ConsultingPatientAction;
+use toubeelib\application\actions\ConsultingPatientRendezVousAction;
 use toubeelib\application\actions\ConsultingPraticienAction;
 use toubeelib\application\actions\ConsultingPraticienDisponibilitiesAction;
 use toubeelib\application\actions\ConsultingRendezVousAction;
@@ -35,6 +36,7 @@ return function( \Slim\App $app):\Slim\App {
 
     // Les patients
     $app->get('/patients/{ID-PATIENT}[/]', ConsultingPatientAction::class)->setName('patient_id');
+    $app->get('/patients/{ID-PATIENT}/rdvs[/]', ConsultingPatientRendezVousAction::class)->setName('patient_id_rdvs');
 
     $app->get('/refresh[/]', RefreshAction::class)->setName('refresh');
 

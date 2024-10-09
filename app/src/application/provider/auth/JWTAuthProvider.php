@@ -23,15 +23,14 @@ class JWTAuthProvider implements AuthProviderInterface
         $this->jwtManager = $jwtManager;
     }
 
-    public function register(string $email, string $password): void
+    public function register(CredentialsDTO $credentialsDTO): void
     {
-        $credentials = new CredentialsDTO($email, $password);
-        $this->authService->register($credentials, 0);
+        $this->authService->register($credentialsDTO, 0);
     }
 
-    public function signin(string $email, string $password): AuthDTO
+    public function signin(CredentialsDTO $credentialsDTO): AuthDTO
     {
-        $credentials = new CredentialsDTO($email, $password);
+        $credentials = new CredentialsDTO($credentialsDTO->email, $credentialsDTO->password);
         $authDTO = $this->authService->byCredentials($credentials);
         $payload = [
             'aud' => 'toubeelib',

@@ -5,17 +5,21 @@ namespace toubeelib\core\services\patient;
 use toubeelib\core\domain\entities\patient\Patient;
 use toubeelib\core\dto\patient\InputPatientDTO;
 use toubeelib\core\dto\patient\PatientDTO;
+use toubeelib\core\dto\rendez_vous\RendezVousDTO;
 use toubeelib\core\repositoryInterfaces\PatientRepositoryInterface;
+use toubeelib\core\repositoryInterfaces\RendezVousRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RepositoryEntityNotFoundException;
 use toubeelib\core\repositoryInterfaces\RepositoryInternalServerError;
 
 class PatientService implements PatientServiceInterface
 {
     private PatientRepositoryInterface $patientRepository;
+    private RendezVousRepositoryInterface $rendezVousRepository;
 
-    public function __construct(PatientRepositoryInterface $patientRepository)
+    public function __construct(PatientRepositoryInterface $patientRepository, RendezVousRepositoryInterface $rendezVousRepository)
     {
         $this->patientRepository = $patientRepository;
+        $this->rendezVousRepository = $rendezVousRepository;
     }
 
     public function createPatient(InputPatientDTO $p): PatientDTO
@@ -43,4 +47,23 @@ class PatientService implements PatientServiceInterface
         }
 
     }
+
+    public function getRendezVousByPatientId(string $id): array
+    {
+        try {
+            $rdvs = $this->rendezVousRepository->getRendezVousByPatientId($id);
+            // convert to DTO
+            $rdvDTOs = [];
+            foreach ($rdvs as $rdv) {
+                $rdvDTO = new RendezVousDTO($rdv);
+                $rdvDTOs[] = $rdvDTO;
+            }
+            return $rdvDTOs;
+        } catch(RepositoryEntityNotFoundException $e) {
+            throw new ServicePatientInvalidDataException('invalid Patient ID');
+        } catch(RepositoryInternalServerError $e) {
+            throw new ServicePatientInternalServerError($e->getMessage());
+        }
+    }
+
 }

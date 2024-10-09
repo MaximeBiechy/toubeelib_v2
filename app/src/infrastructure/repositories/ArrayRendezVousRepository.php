@@ -53,4 +53,14 @@ class ArrayRendezVousRepository implements RendezVousRepositoryInterface
         return $rdvs;
     }
 
+    public function getRendezVousByPatientId(string $id)
+    {
+        $rdvs = [];
+        foreach ($this->rdvs as $rdv) {
+            if ($rdv->getPatientID() == $id) {
+                $rdvs[] = $rdv;
+            }
+        }
+        return $rdvs;
+    }
 }

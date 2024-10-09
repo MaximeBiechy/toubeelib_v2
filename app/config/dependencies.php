@@ -3,6 +3,7 @@
 
 use Psr\Container\ContainerInterface;
 use toubeelib\application\actions\CancelRendezVousAction;
+use toubeelib\application\actions\ConsultingPatientRendezVousAction;
 use toubeelib\application\actions\ConsultingPraticienDisponibilitiesAction;
 use toubeelib\application\actions\CreateRendezVousAction;
 use toubeelib\application\actions\ConsultingPatientAction;
@@ -73,7 +74,8 @@ return [
     },
     PatientServiceInterface::class => function (ContainerInterface $c) {
         return new PatientService(
-            $c->get(PatientRepositoryInterface::class)
+            $c->get(PatientRepositoryInterface::class),
+            $c->get(RendezVousRepositoryInterface::class),
         );
     },
     RendezVousServiceInterface::class => function (ContainerInterface $c) {
@@ -119,6 +121,11 @@ return [
     ConsultingPraticienDisponibilitiesAction::class => function (ContainerInterface $c) {
         return new ConsultingPraticienDisponibilitiesAction(
             $c->get(RendezVousServiceInterface::class)
+        );
+    },
+    ConsultingPatientRendezVousAction::class => function (ContainerInterface $c) {
+        return new ConsultingPatientRendezVousAction(
+            $c->get(PatientServiceInterface::class)
         );
     },
 
