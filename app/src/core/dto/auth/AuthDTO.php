@@ -8,17 +8,17 @@ class AuthDTO extends DTO
 {
     private string $id;
     private string $email;
-    private string $password;
     private int $role;
     private ?string $token;
+    private ?string $token_refresh;
 
-    public function __construct(string $id, string $email, string $password, int $role, string $token = null)
+    public function __construct(string $id, string $email, int $role, string $token = null, string $token_refresh = null)
     {
         $this->id = $id;
         $this->email = $email;
-        $this->password = $password;
         $this->role = $role;
         $this->token = $token;
+        $this->token_refresh = $token_refresh;
     }
 
 }

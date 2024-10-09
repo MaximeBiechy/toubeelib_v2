@@ -26,7 +26,8 @@ class AuthentificationService implements AuthentificationServiceInterface
             if ($user !== null) {
                 throw new AuthentificationServiceBadDataException("User already exists");
             }
-            $user = new User($credentials->email, $credentials->password, $role);
+            $pass = password_hash($credentials->password, PASSWORD_DEFAULT);
+            $user = new User($credentials->email, $pass, $role);
             return $this->authRepository->save($user);
         }catch (RepositoryInternalServerError $e){
             throw new AuthentificationServiceInternalServerErrorException("Error while registering user");
@@ -40,10 +41,10 @@ class AuthentificationService implements AuthentificationServiceInterface
             if ($user === null) {
                 throw new AuthentificationServiceBadDataException("User not found");
             }
-            if ($user->getPassword() !== $credentials->password) {
+            if (!password_verify($credentials->password, $user->getPassword())) {
                 throw new AuthentificationServiceBadDataException("Invalid password");
             }
-            return new AuthDTO($user->getID(), $user->getEmail(), $user->getPassword(), $user->getRole());
+            return new AuthDTO($user->getID(), $user->getEmail(), $user->getRole());
         }catch (RepositoryEntityNotFoundException $e){
             throw new AuthentificationServiceBadDataException("User not found");
         }catch (RepositoryInternalServerError $e){
