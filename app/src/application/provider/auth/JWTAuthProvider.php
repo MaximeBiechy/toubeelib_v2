@@ -1,6 +1,6 @@
 <?php
 
-namespace toubeelib\application\renderer\auth;
+namespace toubeelib\application\provider\auth;
 
 use Firebase\JWT\BeforeValidException;
 use Firebase\JWT\ExpiredException;
@@ -15,10 +15,12 @@ class JWTAuthProvider implements AuthProviderInterface
 {
 
     private AuthentificationServiceInterface $authService;
+    private JWTManager $jwtManager;
 
-    public function __construct(AuthentificationServiceInterface $authService)
+    public function __construct(AuthentificationServiceInterface $authService, JWTManager $jwtManager)
     {
         $this->authService = $authService;
+        $this->jwtManager = $jwtManager;
     }
 
     public function register(string $email, string $password): void
@@ -41,16 +43,16 @@ class JWTAuthProvider implements AuthProviderInterface
                 "role" => $authDTO->role
             ]
         ];
-        $jwt = JWT::encode($payload, getenv('JWT_SECRET_KEY'), 'HS512');
+        $jwt = $this->jwtManager->createAccessToken($payload);
         $payload['exp'] = time() + 3600 * 3;
-        $jwt_refresh = JWT::encode($payload, getenv('JWT_SECRET_KEY'), 'HS512');
+        $jwt_refresh = $this->jwtManager->createRefreshToken($payload);
         return new AuthDTO($authDTO->id, $authDTO->email, $authDTO->role, $jwt, $jwt_refresh);
     }
 
     public function refresh(string $token): AuthDTO
     {
         try{
-            $decoded = JWT::decode($token, new Key(getenv('JWT_SECRET_KEY'), 'HS512'));
+            $decoded = $this->jwtManager->decodeToken($token);
             $payload = [
                 'aud' => 'toubeelib',
                 "iat" => time(),
@@ -61,7 +63,7 @@ class JWTAuthProvider implements AuthProviderInterface
                     "role" => $decoded->data->role
                 ]
             ];
-            $jwt = JWT::encode($payload, getenv('JWT_SECRET_KEY'), 'HS512');
+            $jwt = $this->jwtManager->createAccessToken($payload);
         }catch (ExpiredException $e) {
             // TODO: Implement refresh token
         }catch (SignatureInvalidException $e) {
@@ -76,7 +78,7 @@ class JWTAuthProvider implements AuthProviderInterface
 
     public function getSignedInUser(string $token): AuthDTO
     {
-        $decoded = JWT::decode($token, new Key(getenv('JWT_SECRET_KEY'), 'HS512'));
+        $decoded = $this->jwtManager->decodeToken($token);
         return new AuthDTO($decoded->sub, $decoded->data->email, $decoded->data->role, $token);
     }
 }

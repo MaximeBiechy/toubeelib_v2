@@ -5,11 +5,8 @@ namespace toubeelib\application\actions;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpUnauthorizedException;
-use toubeelib\application\actions\AbstractAction;
-use toubeelib\application\renderer\auth\AuthProviderInterface;
+use toubeelib\application\provider\auth\AuthProviderInterface;
 use toubeelib\application\renderer\JsonRenderer;
-use toubeelib\core\services\auth\AuthentificationServiceBadDataException;
-use toubeelib\core\services\auth\AuthentificationServiceInterface;
 use toubeelib\core\services\auth\AuthentificationServiceInternalServerErrorException;
 
 class RefreshAction extends AbstractAction

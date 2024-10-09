@@ -4,9 +4,8 @@ namespace toubeelib\application\middlewares;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-
 use Slim\Exception\HttpUnauthorizedException;
-use toubeelib\application\renderer\auth\AuthProviderInterface;
+use toubeelib\application\provider\auth\AuthProviderInterface;
 
 class Auth
 {

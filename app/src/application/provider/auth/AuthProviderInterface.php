@@ -1,6 +1,6 @@
 <?php
 
-namespace toubeelib\application\renderer\auth;
+namespace toubeelib\application\provider\auth;
 
 use toubeelib\core\dto\auth\AuthDTO;
 

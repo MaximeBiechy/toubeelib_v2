@@ -3,10 +3,9 @@ namespace toubeelib\application\actions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpNotFoundException;
-use toubeelib\application\renderer\auth\AuthProviderInterface;
+use toubeelib\application\provider\auth\AuthProviderInterface;
 use toubeelib\application\renderer\JsonRenderer;
 use toubeelib\core\dto\auth\CredentialsDTO;
 use toubeelib\core\services\auth\AuthentificationServiceBadDataException;
@@ -42,5 +41,3 @@ class SigninAction extends AbstractAction {
     }
   }
 }
-
-?>
