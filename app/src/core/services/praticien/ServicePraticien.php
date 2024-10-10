@@ -58,4 +58,32 @@ class ServicePraticien implements ServicePraticienInterface
             throw new ServicePraticienInternalServerError( $e->getMessage());
         }
     }
+
+    public function getAllPraticiens(): array
+    {
+        try {
+            $praticiens = $this->praticienRepository->getAllPraticiens();
+            $praticiensDTO = [];
+            foreach ($praticiens as $praticien) {
+                $praticiensDTO[] = $praticien->toDTO();
+            }
+            return $praticiensDTO;
+        } catch(RepositoryInternalServerError $e) {
+            throw new ServicePraticienInternalServerError($e->getMessage());
+        }
+    }
+
+    public function searchPraticiens(string $search): array
+    {
+        try {
+            $praticiens = $this->praticienRepository->searchPraticiens($search);
+            $praticiensDTO = [];
+            foreach ($praticiens as $praticien) {
+                $praticiensDTO[] = $praticien->toDTO();
+            }
+            return $praticiensDTO;
+        } catch(RepositoryInternalServerError $e) {
+            throw new ServicePraticienInternalServerError($e->getMessage());
+        }
+    }
 }

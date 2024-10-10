@@ -76,4 +76,41 @@ class PDOPraticienRepository implements PraticienRepositoryInterface
         }
 
     }
+
+    public function getAllPraticiens(): array
+    {
+        try{
+            $query = $this->pdo->query('SELECT * FROM praticien');
+            $praticiens = $query->fetchAll();
+            $result = [];
+            foreach ($praticiens as $praticien) {
+                $p = new Praticien($praticien['nom'], $praticien['prenom'], $praticien['adresse'], $praticien['telephone']);
+                $p->setID($praticien['id']);
+                $p->setSpecialite($this->getSpecialiteById($praticien['specialite_id']));
+                $result[] = $p;
+            }
+            return $result;
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalServerError("Error while fetching praticiens");
+        }
+    }
+
+    public function searchPraticiens(string $search): array
+    {
+        try{
+            $query = $this->pdo->prepare('SELECT * FROM praticien WHERE nom LIKE :search OR prenom LIKE :search');
+            $query->execute(['search' => "%$search%"]);
+            $praticiens = $query->fetchAll();
+            $result = [];
+            foreach ($praticiens as $praticien) {
+                $p = new Praticien($praticien['nom'], $praticien['prenom'], $praticien['adresse'], $praticien['telephone']);
+                $p->setID($praticien['id']);
+                $p->setSpecialite($this->getSpecialiteById($praticien['specialite_id']));
+                $result[] = $p;
+            }
+            return $result;
+        } catch (\PDOException $e) {
+            throw new RepositoryInternalServerError("Error while fetching praticiens");
+        }
+    }
 }

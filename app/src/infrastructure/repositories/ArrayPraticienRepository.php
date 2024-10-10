@@ -87,4 +87,20 @@ class ArrayPraticienRepository implements PraticienRepositoryInterface
         return $praticien;
     }
 
+    public function getAllPraticiens(): array
+    {
+        return $this->praticiens;
+    }
+
+    public function searchPraticiens(string $search): array
+    {
+        $result = [];
+        foreach ($this->praticiens as $praticien) {
+            if (stripos($praticien->getNom(), $search) !== false || stripos($praticien->getPrenom(), $search) !== false) {
+                $result[] = $praticien;
+            }
+        }
+        return $result;
+    }
+
 }

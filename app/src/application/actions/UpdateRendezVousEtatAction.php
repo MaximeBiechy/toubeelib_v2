@@ -11,7 +11,6 @@ use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Routing\RouteContext;
 use toubeelib\application\renderer\JsonRenderer;
-use toubeelib\core\dto\rendez_vous\UpdateSpecialityRendezVousDTO;
 use toubeelib\core\services\rendez_vous\RendezVousBadDataException;
 use toubeelib\core\services\rendez_vous\rendezVousInternalServerError;
 use toubeelib\core\services\rendez_vous\RendezVousNotFoundException;

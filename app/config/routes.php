@@ -4,6 +4,7 @@ declare(strict_types=1);
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use toubeelib\application\actions\CancelRendezVousAction;
+use toubeelib\application\actions\ConsultingAllPraticiensAction;
 use toubeelib\application\actions\ConsultingPatientAction;
 use toubeelib\application\actions\ConsultingPatientRendezVousAction;
 use toubeelib\application\actions\ConsultingPraticienAction;
@@ -33,6 +34,7 @@ return function( \Slim\App $app):\Slim\App {
     $app->delete('/rdvs/{ID-RDV}[/]', CancelRendezVousAction::class)->setName('cancel_rendez_vous_id'); // ! Route pour annuler un rendez-vous
 
     // Les praticiens
+    $app->get('/praticiens[/]', ConsultingAllPraticiensAction::class)->setName('praticiens');
     $app->get('/praticiens/{ID-PRATICIEN}[/]', ConsultingPraticienAction::class)->setName('praticien_id');
     $app->get('/praticiens/{ID-PRATICIEN}/disponibilites[/]', ConsultingPraticienDisponibilitiesAction::class)->setName('praticien_id_disponibilites');
 
