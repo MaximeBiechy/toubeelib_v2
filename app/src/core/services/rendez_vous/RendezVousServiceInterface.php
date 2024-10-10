@@ -24,4 +24,11 @@ interface RendezVousServiceInterface
     public function updateSpecialityRendezVous(UpdateSpecialityRendezVousDTO $dto): void;
 
     public function updatePatientRendezVous(UpdatePatientRendezVousDTO $dto): void;
+
+    public function honorRendezVous(string $id): void;
+
+    public function nonHonorRendezVous(string $id): void;
+
+    public function payRendezVous(string $id): void;
+
 }

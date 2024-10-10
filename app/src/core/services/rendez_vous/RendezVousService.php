@@ -182,4 +182,50 @@ class RendezVousService implements RendezVousServiceInterface
 
     }
 
+    public function honorRendezVous(string $id): void
+    {
+        try {
+            $rdv = $this->rdvRepository->getRDVById($id);
+            $rdv->realiser();
+            $this->rdvRepository->saveRDV($rdv);
+            $this->logger->info('RDV honored', ['id' => $id]);
+        } catch (RepositoryEntityNotFoundException $e) {
+            throw new RendezVousNotFoundException();
+        } catch (RepositoryInternalServerError $e) {
+            throw new RendezVousInternalServerError($e->getMessage());
+        } catch (\Exception $e) {
+            throw new RendezVousBadDataException($e->getMessage());
+        }
+    }
+
+    public function nonHonorRendezVous(string $id): void
+    {
+        try {
+            $rdv = $this->rdvRepository->getRDVById($id);
+            $rdv->nonHonore();
+            $this->rdvRepository->saveRDV($rdv);
+            $this->logger->info('RDV non honored', ['id' => $id]);
+        } catch (RepositoryEntityNotFoundException $e) {
+            throw new RendezVousNotFoundException();
+        } catch (RepositoryInternalServerError $e) {
+            throw new RendezVousInternalServerError($e->getMessage());
+        }
+    }
+
+    public function payRendezVous(string $id): void
+    {
+        try {
+            $rdv = $this->rdvRepository->getRDVById($id);
+            $rdv->payer();
+            $this->rdvRepository->saveRDV($rdv);
+            $this->logger->info('RDV payed', ['id' => $id]);
+        } catch (RepositoryEntityNotFoundException $e) {
+            throw new RendezVousNotFoundException();
+        } catch (RepositoryInternalServerError $e) {
+            throw new RendezVousInternalServerError($e->getMessage());
+        } catch (\Exception $e) {
+            throw new RendezVousBadDataException($e->getMessage());
+        }
+    }
+
 }

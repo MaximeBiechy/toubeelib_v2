@@ -12,6 +12,7 @@ use toubeelib\application\actions\ConsultingRendezVousAction;
 use toubeelib\application\actions\CreateRendezVousAction;
 use toubeelib\application\actions\RefreshAction;
 use toubeelib\application\actions\UpdateRendezVousAction;
+use toubeelib\application\actions\UpdateRendezVousEtatAction;
 
 return function( \Slim\App $app):\Slim\App {
 
@@ -28,6 +29,7 @@ return function( \Slim\App $app):\Slim\App {
     $app->get('/rdvs/{ID-RDV}[/]', ConsultingRendezVousAction::class)->setName('rendez_vous_id');
     $app->post('/rdvs[/]', CreateRendezVousAction::class)->setName('create_rendez_vous_id');
     $app->patch('/rdvs/{ID-RDV}[/]', UpdateRendezVousAction::class)->setName('update_rendez_vous_id');
+    $app->patch('/rdvs/{ID-RDV}/state', UpdateRendezVousEtatAction::class)->setName('update_rendez_vous_id_etat');
     $app->delete('/rdvs/{ID-RDV}[/]', CancelRendezVousAction::class)->setName('cancel_rendez_vous_id'); // ! Route pour annuler un rendez-vous
 
     // Les praticiens

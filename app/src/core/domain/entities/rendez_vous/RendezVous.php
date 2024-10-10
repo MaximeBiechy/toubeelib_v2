@@ -10,6 +10,7 @@ class RendezVous extends Entity
     private const STATUT_REALISE = "REALISE";
     private const STATUT_NON_HONORE = "NON_HONORE";
     private const STATUT_ANNULE = "ANNULE";
+    private const STATUT_PAYE = "PAYE";
     protected \DateTimeImmutable $date;
     protected int $duree = 30;
     protected string $patientID;
@@ -17,14 +18,14 @@ class RendezVous extends Entity
     protected string $speciality;
     protected string $statut;
 
-    public function __construct(string $praticienID, string $patientID, string $speciality, string $date)
+    public function __construct(string $praticienID, string $patientID, string $speciality, string $date, string $statut = self::STATUT_PREVU)
     {
         $this->id = null;
         $this->date = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $date);
         $this->praticienID = $praticienID;
         $this->patientID = $patientID;
         $this->speciality = $speciality;
-        $this->statut = self::STATUT_PREVU;
+        $this->statut = $statut;
     }
 
 
@@ -77,6 +78,14 @@ class RendezVous extends Entity
             throw new \Exception("Impossible de marquer un rendez-vous annulé comme non honoré");
         }
         $this->statut = self::STATUT_NON_HONORE;
+    }
+
+    public function payer(): void
+    {
+        if ($this->statut === self::STATUT_ANNULE) {
+            throw new \Exception("Impossible de payer un rendez-vous annulé");
+        }
+        $this->statut = self::STATUT_PAYE;
     }
 
     public function getSpeciality(): string

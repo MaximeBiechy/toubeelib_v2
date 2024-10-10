@@ -10,6 +10,7 @@ use toubeelib\application\actions\ConsultingPatientAction;
 use toubeelib\application\actions\ConsultingPraticienAction;
 use toubeelib\application\actions\ConsultingRendezVousAction;
 use toubeelib\application\actions\UpdateRendezVousAction;
+use toubeelib\application\actions\UpdateRendezVousEtatAction;
 use toubeelib\core\repositoryInterfaces\PatientRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\PraticienRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RendezVousRepositoryInterface;
@@ -126,6 +127,11 @@ return [
     ConsultingPatientRendezVousAction::class => function (ContainerInterface $c) {
         return new ConsultingPatientRendezVousAction(
             $c->get(PatientServiceInterface::class)
+        );
+    },
+    UpdateRendezVousEtatAction::class => function (ContainerInterface $c) {
+        return new UpdateRendezVousEtatAction(
+            $c->get(RendezVousServiceInterface::class)
         );
     },
 

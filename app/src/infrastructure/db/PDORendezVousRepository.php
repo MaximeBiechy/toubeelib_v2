@@ -51,7 +51,7 @@ class PDORendezVousRepository implements RendezVousRepositoryInterface
             if ($rdv === false) {
                 throw new RepositoryEntityNotFoundException("Rendez-vous not found");
             }
-            $rdva =  new RendezVous($rdv['praticien_id'], $rdv['patient_id'], $rdv['specialite_id'], $rdv['date']);
+            $rdva =  new RendezVous($rdv['praticien_id'], $rdv['patient_id'], $rdv['specialite_id'], $rdv['date'], $rdv['statut']);
             $rdva->setID($rdv['id']);
             return $rdva;
         } catch (\PDOException $e) {
