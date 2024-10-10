@@ -22,7 +22,7 @@ class ArrayRendezVousRepository implements RendezVousRepositoryInterface
         $this->rdvs  = ['r1'=> $r1, 'r2'=>$r2, 'r3'=> $r3 ];
     }
 
-    public function saveRDV(RendezVous $rdv): string
+    public function save(RendezVous $rdv): string
     {
         if ($rdv->getID() !== null && isset($this->rdvs[$rdv->getID()])) {
             $this->rdvs[$rdv->getID()] = $rdv;
@@ -34,7 +34,7 @@ class ArrayRendezVousRepository implements RendezVousRepositoryInterface
         return $rdv->getID();
     }
 
-    public function getRDVById(string $id): RendezVous
+    public function getRendezVousById(string $id): RendezVous
     {
         if (!isset($this->rdvs[$id])) {
             throw new RepositoryEntityNotFoundException("Rendez-vous not found");
@@ -42,7 +42,7 @@ class ArrayRendezVousRepository implements RendezVousRepositoryInterface
         return $this->rdvs[$id];
     }
 
-    public function getRDVByPraticienId(string $praticienId): array
+    public function getRendezVousByPraticienId(string $praticienId): array
     {
         $rdvs = [];
         foreach ($this->rdvs as $rdv) {

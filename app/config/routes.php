@@ -10,6 +10,7 @@ use toubeelib\application\actions\ConsultingPatientRendezVousAction;
 use toubeelib\application\actions\ConsultingPraticienAction;
 use toubeelib\application\actions\ConsultingPraticienDisponibilitiesAction;
 use toubeelib\application\actions\ConsultingRendezVousAction;
+use toubeelib\application\actions\ConsultingRendezVousPraticienAction;
 use toubeelib\application\actions\CreateRendezVousAction;
 use toubeelib\application\actions\RefreshAction;
 use toubeelib\application\actions\UpdateRendezVousAction;
@@ -37,6 +38,7 @@ return function( \Slim\App $app):\Slim\App {
     $app->get('/praticiens[/]', ConsultingAllPraticiensAction::class)->setName('praticiens');
     $app->get('/praticiens/{ID-PRATICIEN}[/]', ConsultingPraticienAction::class)->setName('praticien_id');
     $app->get('/praticiens/{ID-PRATICIEN}/disponibilites[/]', ConsultingPraticienDisponibilitiesAction::class)->setName('praticien_id_disponibilites');
+    $app->get('/praticiens/{ID-PRATICIEN}/rdvs[/]', ConsultingRendezVousPraticienAction::class)->setName('praticien_id_rdvs');
 
     // Les patients
     $app->get('/patients/{ID-PATIENT}[/]', ConsultingPatientAction::class)->setName('patient_id');

@@ -17,7 +17,7 @@ class PDORendezVousRepository implements RendezVousRepositoryInterface
         $this->pdo = $pdo;
     }
 
-    public function saveRDV(RendezVous $rdv): string
+    public function save(RendezVous $rdv): string
     {
         try{
             if ($rdv->getID() !== null) {
@@ -42,7 +42,7 @@ class PDORendezVousRepository implements RendezVousRepositoryInterface
         }
     }
 
-    public function getRDVById(string $id): RendezVous
+    public function getRendezVousById(string $id): RendezVous
     {
         try{
             $stmt = $this->pdo->prepare("SELECT * FROM rendez_vous WHERE id = :id");
@@ -60,7 +60,7 @@ class PDORendezVousRepository implements RendezVousRepositoryInterface
 
     }
 
-    public function getRDVByPraticienId(string $praticienId): array
+    public function getRendezVousByPraticienId(string $praticienId): array
     {
         try {
             $stmt = $this->pdo->prepare("SELECT * FROM rendez_vous WHERE praticien_id = :praticien_id");
@@ -68,7 +68,7 @@ class PDORendezVousRepository implements RendezVousRepositoryInterface
             $rdvs = $stmt->fetchAll();
             $rdvsArray = [];
             foreach ($rdvs as $rdv) {
-                $rdva = new RendezVous($rdv['praticien_id'], $rdv['patient_id'], $rdv['specialite_id'], $rdv['date']);
+                $rdva = new RendezVous($rdv['praticien_id'], $rdv['patient_id'], $rdv['specialite_id'], $rdv['date'], $rdv['statut']);
                 $rdva->setID($rdv['id']);
                 $rdvsArray[] = $rdva;
             }
@@ -78,7 +78,7 @@ class PDORendezVousRepository implements RendezVousRepositoryInterface
         }
     }
 
-    public function getRendezVousByPatientId(string $id)
+    public function getRendezVousByPatientId(string $id): array
     {
         try {
             $stmt = $this->pdo->prepare("SELECT * FROM rendez_vous WHERE patient_id = :patient_id");
@@ -86,7 +86,7 @@ class PDORendezVousRepository implements RendezVousRepositoryInterface
             $rdvs = $stmt->fetchAll();
             $rdvsArray = [];
             foreach ($rdvs as $rdv) {
-                $rdva = new RendezVous($rdv['praticien_id'], $rdv['patient_id'], $rdv['specialite_id'], $rdv['date']);
+                $rdva = new RendezVous($rdv['praticien_id'], $rdv['patient_id'], $rdv['specialite_id'], $rdv['date'], $rdv['statut']);
                 $rdva->setID($rdv['id']);
                 $rdvsArray[] = $rdva;
             }

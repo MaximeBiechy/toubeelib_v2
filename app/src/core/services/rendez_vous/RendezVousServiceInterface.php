@@ -2,6 +2,7 @@
 
 namespace toubeelib\core\services\rendez_vous;
 
+use toubeelib\core\dto\rendez_vous\CalendarRendezVousDTO;
 use toubeelib\core\dto\rendez_vous\CancelRendezVousDTO;
 use toubeelib\core\dto\rendez_vous\CreateRendezVousDTO;
 use toubeelib\core\dto\rendez_vous\DisponibilityPraticienRendezVousDTO;
@@ -30,5 +31,9 @@ interface RendezVousServiceInterface
     public function nonHonorRendezVous(string $id): void;
 
     public function payRendezVous(string $id): void;
+
+    public function getRendezVousByPraticien(string $id): array;
+
+    public function getCalendarRendezVousByPraticien(CalendarRendezVousDTO $calendarRendezVousDTO): array;
 
 }
