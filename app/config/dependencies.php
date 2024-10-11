@@ -7,6 +7,7 @@ use toubeelib\application\actions\ConsultingAllPraticiensAction;
 use toubeelib\application\actions\ConsultingPatientRendezVousAction;
 use toubeelib\application\actions\ConsultingPraticienDisponibilitiesAction;
 use toubeelib\application\actions\ConsultingRendezVousPraticienAction;
+use toubeelib\application\actions\CreatePraticienAction;
 use toubeelib\application\actions\CreateRendezVousAction;
 use toubeelib\application\actions\ConsultingPatientAction;
 use toubeelib\application\actions\ConsultingPraticienAction;
@@ -144,6 +145,11 @@ return [
     ConsultingRendezVousPraticienAction::class => function (ContainerInterface $c) {
         return new ConsultingRendezVousPraticienAction(
             $c->get(RendezVousServiceInterface::class)
+        );
+    },
+    CreatePraticienAction::class => function (ContainerInterface $c) {
+        return new CreatePraticienAction(
+            $c->get(ServicePraticienInterface::class)
         );
     },
 
