@@ -50,7 +50,7 @@ class RendezVousService implements RendezVousServiceInterface
             $rdvs = $this->rdvRepository->getRendezVousByPraticienId($createRDVDTO->praticienID);
             if ($rdvs != null) {
                 foreach ($rdvs as $rdv) {
-                    if ($rdv->getDate() == $createRDVDTO->date) {
+                    if ($rdv->getDate()->format('Y-m-d H:i:s') == $createRDVDTO->date) {
                         throw new RendezVousPraticienNotAvailableException();
                     }
                 }
