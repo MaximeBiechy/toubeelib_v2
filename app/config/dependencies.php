@@ -29,6 +29,7 @@ use toubeelib\infrastructure\db\PDORendezVousRepository;
 use toubeelib\infrastructure\repositories\ArrayPatientRepository;
 use toubeelib\infrastructure\repositories\ArrayPraticienRepository;
 use toubeelib\infrastructure\repositories\ArrayRendezVousRepository;
+use toubeelib\application\actions\SignupAction;
 
 return [
 
@@ -150,6 +151,11 @@ return [
     CreatePraticienAction::class => function (ContainerInterface $c) {
         return new CreatePraticienAction(
             $c->get(ServicePraticienInterface::class)
+        );
+    },
+    SignupPatientAction::class => function (ContainerInterface $c) {
+        return new SignupPatientAction(
+            $c->get(PatientServiceInterface::class)
         );
     },
 

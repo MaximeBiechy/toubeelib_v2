@@ -45,7 +45,7 @@ return function( \Slim\App $app):\Slim\App {
     // Les patients
     $app->get('/patients/{ID-PATIENT}[/]', ConsultingPatientAction::class)->setName('patient_id');
     $app->get('/patients/{ID-PATIENT}/rdvs[/]', ConsultingPatientRendezVousAction::class)->setName('patient_id_rdvs');
-
+    $app->post('/patients[/]', SignupPatientAction::class)->setName('signup_patient');
     $app->get('/refresh[/]', RefreshAction::class)->setName('refresh');
 
     return $app;

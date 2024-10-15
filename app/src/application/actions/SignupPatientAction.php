@@ -13,7 +13,7 @@ use toubeelib\application\renderer\JsonRenderer;
 use toubeelib\core\services\auth\AuthentificationServiceBadDataException;
 use toubeelib\core\services\auth\AuthentificationServiceNotFoundException;
 
-class SignupPatient extends AbstractAction{
+class SignupPatientAction extends AbstractAction{
 
     private AuthProviderInterface $authnProviderInterface;
 
