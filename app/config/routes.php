@@ -15,6 +15,7 @@ use toubeelib\application\actions\CreatePraticienAction;
 use toubeelib\application\actions\CreateRendezVousAction;
 use toubeelib\application\actions\RefreshAction;
 use toubeelib\application\actions\SigninAction;
+use toubeelib\application\actions\UpdatePraticienIndisponibilitiesAction;
 use toubeelib\application\actions\UpdateRendezVousAction;
 use toubeelib\application\actions\UpdateRendezVousEtatAction;
 use toubeelib\application\middlewares\Auth;
@@ -53,6 +54,8 @@ return function( \Slim\App $app):\Slim\App {
     $app->get('/praticiens/{ID-PRATICIEN}/disponibilites[/]', ConsultingPraticienDisponibilitiesAction::class)->setName('praticien_id_disponibilites');
     $app->get('/praticiens/{ID-PRATICIEN}/rdvs[/]', ConsultingRendezVousPraticienAction::class)->setName('praticien_id_rdvs')
         ->add(AuthzPraticien::class)->add(Auth::class);
+    $app->get('/praticiens/{ID-PRATICIEN}/rdvs[/]', ConsultingRendezVousPraticienAction::class)->setName('praticien_id_rdvs');
+    $app->post('/praticiens/{ID-PRATICIEN}/indisponibilites[/]', UpdatePraticienIndisponibilitiesAction::class)->setName('praticien_id_indisponibilites');
 
     // Les patients
     $app->get('/patients/{ID-PATIENT}[/]', ConsultingPatientAction::class)->setName('patient_id')
@@ -60,6 +63,9 @@ return function( \Slim\App $app):\Slim\App {
     $app->get('/patients/{ID-PATIENT}/rdvs[/]', ConsultingPatientRendezVousAction::class)->setName('patient_id_rdvs')
         ->add(AuthzPatient::class)->add(Auth::class);
 
+    $app->get('/patients/{ID-PATIENT}[/]', ConsultingPatientAction::class)->setName('patient_id');
+    $app->get('/patients/{ID-PATIENT}/rdvs[/]', ConsultingPatientRendezVousAction::class)->setName('patient_id_rdvs');
+    $app->post('/patients/signup[/]', SignupPatientAction::class)->setName('signup_patient');
     $app->get('/refresh[/]', RefreshAction::class)->setName('refresh');
     $app->post('/signin[/]', SigninAction::class)->setName('signin');
 

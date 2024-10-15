@@ -14,6 +14,7 @@ use toubeelib\application\actions\ConsultingPraticienAction;
 use toubeelib\application\actions\ConsultingRendezVousAction;
 use toubeelib\application\actions\RefreshAction;
 use toubeelib\application\actions\SigninAction;
+use toubeelib\application\actions\UpdatePraticienIndisponibilitiesAction;
 use toubeelib\application\actions\UpdateRendezVousAction;
 use toubeelib\application\actions\UpdateRendezVousEtatAction;
 use toubeelib\application\middlewares\Auth;
@@ -48,6 +49,7 @@ use toubeelib\infrastructure\db\PDORendezVousRepository;
 use toubeelib\infrastructure\repositories\ArrayPatientRepository;
 use toubeelib\infrastructure\repositories\ArrayPraticienRepository;
 use toubeelib\infrastructure\repositories\ArrayRendezVousRepository;
+use toubeelib\application\actions\SignupAction;
 
 return [
 
@@ -237,6 +239,17 @@ return [
     AuthzRendezVous::class => function (ContainerInterface $c) {
         return new AuthzRendezVous(
             $c->get(AuthorizationRendezVousServiceInterface::class)
+        );
+    },
+    UpdatePraticienIndisponibilitiesAction::class => function (ContainerInterface $c) {
+        return new UpdatePraticienIndisponibilitiesAction(
+            $c->get(RendezVousServiceInterface::class),
+            $c->get(ServicePraticienInterface::class)
+        );
+    },
+    SignupPatientAction::class => function (ContainerInterface $c) {
+        return new SignupPatientAction(
+            $c->get(PatientServiceInterface::class)
         );
     },
 

@@ -14,6 +14,7 @@ interface ServicePraticienInterface
     public function getSpecialiteById(string $id): SpecialiteDTO;
     public function getAllPraticiens(): array;
     public function searchPraticiens(string $search): array;
+    public function getSpecialiteIdByPraticienId(string $praticienId): string;
 
 
 }
