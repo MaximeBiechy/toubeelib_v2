@@ -86,4 +86,16 @@ class ServicePraticien implements ServicePraticienInterface
             throw new ServicePraticienInternalServerError($e->getMessage());
         }
     }
+
+    public function getSpecialiteIdByPraticienId(string $praticienId): string
+    {
+        try {
+            $praticien = $this->praticienRepository->getPraticienById($praticienId);
+            return $praticien->getSpecialite();
+        } catch (RepositoryEntityNotFoundException $e) {
+            throw new ServicePraticienInvalidDataException('invalid Praticien ID');
+        } catch (RepositoryInternalServerError $e) {
+            throw new ServicePraticienInternalServerError($e->getMessage());
+        }
+    }
 }
