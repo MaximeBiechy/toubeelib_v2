@@ -6,11 +6,11 @@ use toubeelib\core\dto\DTO;
 
 class AuthDTO extends DTO
 {
-    private string $id;
-    private string $email;
-    private int $role;
-    private ?string $token;
-    private ?string $token_refresh;
+    protected string $id;
+    protected string $email;
+    protected int $role;
+    protected ?string $token;
+    protected ?string $token_refresh;
 
     public function __construct(string $id, string $email, int $role, string $token = null, string $token_refresh = null)
     {

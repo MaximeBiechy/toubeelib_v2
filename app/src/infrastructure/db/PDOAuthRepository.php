@@ -43,7 +43,7 @@ class PDOAuthRepository implements AuthRepositoryInterface
     public function getUserByEmail(string $email): User
     {
         try{
-            $stmt = $this->pdo->prepare("SELECT * FROM user WHERE email = :email");
+            $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
             $stmt->execute(['email' => $email]);
             $user = $stmt->fetch();
             if ($user === false) {
@@ -53,7 +53,7 @@ class PDOAuthRepository implements AuthRepositoryInterface
             $u->setID($user['id']);
             return $u;
         }catch (\PDOException $e){
-            throw new RepositoryInternalServerError("Error while fetching user");
+            throw new RepositoryInternalServerError("Error while fetching user". $e->getMessage());
         }
     }
 

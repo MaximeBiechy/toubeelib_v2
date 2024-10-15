@@ -64,20 +64,30 @@ class JWTAuthProvider implements AuthProviderInterface
             ];
             $jwt = $this->jwtManager->createAccessToken($payload);
         }catch (ExpiredException $e) {
-            // TODO: Implement refresh token
+            throw new AuthProviderTokenExpiredException('Token expired');
         }catch (SignatureInvalidException $e) {
-            // TODO: Implement refresh token
+            throw new AuthProviderSignatureInvalidException('Token signature invalid');
         }catch (BeforeValidException $e) {
-            // TODO: Implement refresh token
+            throw new AuthProviderBeforeValidException('Token not yet valid');
         }catch (\UnexpectedValueException $e) {
-            // TODO: Implement refresh token
+            throw new AuthProviderUnexpectedValueException('Token not valid');
         }
         return new AuthDTO($decoded->sub, $decoded->data->email, $decoded->data->role, $jwt, $token);
     }
 
     public function getSignedInUser(string $token): AuthDTO
     {
-        $decoded = $this->jwtManager->decodeToken($token);
-        return new AuthDTO($decoded->sub, $decoded->data->email, $decoded->data->role, $token);
+        try{
+            $decoded = $this->jwtManager->decodeToken($token);
+            return new AuthDTO($decoded['sub'], $decoded['data']->email, $decoded['data']->role, $token);
+        }catch (ExpiredException $e) {
+            throw new AuthProviderTokenExpiredException('Token expired');
+        }catch (SignatureInvalidException $e) {
+            throw new AuthProviderSignatureInvalidException('Token signature invalid');
+        }catch (BeforeValidException $e) {
+            throw new AuthProviderBeforeValidException('Token not yet valid');
+        }catch (\UnexpectedValueException $e) {
+            throw new AuthProviderUnexpectedValueException('Token not valid');
+        }
     }
 }

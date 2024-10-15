@@ -1,6 +1,6 @@
 <?php
 
-namespace toubeelib\core\services\authorization;
+namespace toubeelib\core\services\patient;
 
 class AuthorizationServiceInternalServerErrorException extends \Exception
 {

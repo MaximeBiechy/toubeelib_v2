@@ -70,3 +70,4 @@
 [2024-10-10T09:19:18.697098+00:00] njp.program.log.INFO: RDV payed {"id":"38da9596-389e-4e8d-a821-66cda7766388"} []
 [2024-10-10T09:19:44.091535+00:00] njp.program.log.INFO: RDV payed {"id":"38da9596-389e-4e8d-a821-66cda7766388"} []
 [2024-10-10T09:20:26.389517+00:00] njp.program.log.INFO: RDV payed {"id":"38da9596-389e-4e8d-a821-66cda7766388"} []
+[2024-10-15T13:39:38.117974+00:00] njp.program.log.INFO: RDV cancelled {"id":"bd06948d-f000-4135-8c91-670659121010"} []
