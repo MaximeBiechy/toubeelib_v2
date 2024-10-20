@@ -19,4 +19,4 @@ CREATE TABLE "public"."specialite" (
 ) WITH (oids = false);
 
 
--- 2024-10-01 15:10:52.474796+00
+-- 2024-10-20 15:06:12.022713+00

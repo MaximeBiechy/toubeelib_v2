@@ -1,4 +1,4 @@
--- Adminer 4.8.1 PostgreSQL 16.1 (Debian 16.1-1.pgdg120+1) dump
+-- Adminer 4.8.1 PostgreSQL 16.4 (Debian 16.4-1.pgdg120+1) dump
 
 INSERT INTO "users" ("id", "email", "password", "role") VALUES
 ('118a9bca-b30e-360a-9acb-0f44498fa9cb',	'munoz.theophile@laposte.net',	'$2y$10$jdB9eypmLmifN5i5n5IwrOi9G6tySqYhsFAfJhHSgYmldTmuaKd3u',	0),
@@ -152,4 +152,4 @@ INSERT INTO "users" ("id", "email", "password", "role") VALUES
 ('a115c355-fc49-3f16-93a9-275ea42ed489',	'bweiss@yahoo.fr',	'$2y$10$6PlgoWDGd2IUdsLxrAObheiTtQyhSIKaDEqapmb/9X1/a1uEiFTfm',	5),
 ('1016324e-7a32-3fca-9844-6ed51debaefb',	'guillaume.costa@dbmail.com',	'$2y$10$UwhIEYM7.W8YfnmA.R8yHuJIFg1OhRmQldh/XRLIB9oJ865dLP3ly',	5);
 
--- 2024-10-07 07:09:55.384084+00
+-- 2024-10-20 15:05:03.924878+00
