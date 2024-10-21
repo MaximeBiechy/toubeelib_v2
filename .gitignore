@@ -10,7 +10,6 @@ vendor/
 *.env
 .env.local
 .env.*.local
-*.ini
 
 # Log files
 npm-debug.log*
