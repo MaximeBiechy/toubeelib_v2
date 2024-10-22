@@ -22,11 +22,11 @@ class PDOAuthRepository implements AuthRepositoryInterface
     {
         try{
             if ($user->getID() !== null) {
-                $stmt = $this->pdo->prepare("UPDATE user SET email = :email, password = :password, role = :role WHERE id = :id");
+                $stmt = $this->pdo->prepare("UPDATE users SET email = :email, password = :password, role = :role WHERE id = :id");
             }else{
                 $id = Uuid::uuid4()->toString();
                 $user->setID($id);
-                $stmt = $this->pdo->prepare("INSERT INTO user (id, email, password, role) VALUES (:id, :email, :password, :role)");
+                $stmt = $this->pdo->prepare("INSERT INTO users (id, email, password, role) VALUES (:id, :email, :password, :role)");
             }
             $stmt->execute([
                 'id' => $user->getID(),
@@ -60,7 +60,7 @@ class PDOAuthRepository implements AuthRepositoryInterface
     public function getUserById(string $id): User
     {
         try{
-            $stmt = $this->pdo->prepare("SELECT * FROM user WHERE id = :id");
+            $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id = :id");
             $stmt->execute(['id' => $id]);
             $user = $stmt->fetch();
             if ($user === false) {
@@ -77,7 +77,7 @@ class PDOAuthRepository implements AuthRepositoryInterface
     public function getUsersByRole(int $role): array
     {
         try{
-            $stmt = $this->pdo->prepare("SELECT * FROM user WHERE role = :role");
+            $stmt = $this->pdo->prepare("SELECT * FROM users WHERE role = :role");
             $stmt->execute(['role' => $role]);
             $users = $stmt->fetchAll();
             $result = [];
