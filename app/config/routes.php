@@ -26,7 +26,6 @@ use toubeelib\application\middlewares\AuthzRendezVous;
 return function( \Slim\App $app):\Slim\App {
 
     // Middlewares
-    $app->add( \toubeelib\application\middlewares\Cors::class );
 
     $app->options('/{routes:.+}', function (Request $rq, Response $rs, array $args): Response {
         return $rs;
@@ -54,7 +53,6 @@ return function( \Slim\App $app):\Slim\App {
     $app->get('/praticiens/{ID-PRATICIEN}/disponibilites[/]', ConsultingPraticienDisponibilitiesAction::class)->setName('praticien_id_disponibilites');
     $app->get('/praticiens/{ID-PRATICIEN}/rdvs[/]', ConsultingRendezVousPraticienAction::class)->setName('praticien_id_rdvs')
         ->add(AuthzPraticien::class)->add(Auth::class);
-    $app->get('/praticiens/{ID-PRATICIEN}/rdvs[/]', ConsultingRendezVousPraticienAction::class)->setName('praticien_id_rdvs');
     $app->post('/praticiens/{ID-PRATICIEN}/indisponibilites[/]', UpdatePraticienIndisponibilitiesAction::class)->setName('praticien_id_indisponibilites');
 
     // Les patients
@@ -63,8 +61,6 @@ return function( \Slim\App $app):\Slim\App {
     $app->get('/patients/{ID-PATIENT}/rdvs[/]', ConsultingPatientRendezVousAction::class)->setName('patient_id_rdvs')
         ->add(AuthzPatient::class)->add(Auth::class);
 
-    $app->get('/patients/{ID-PATIENT}[/]', ConsultingPatientAction::class)->setName('patient_id');
-    $app->get('/patients/{ID-PATIENT}/rdvs[/]', ConsultingPatientRendezVousAction::class)->setName('patient_id_rdvs');
     $app->post('/patients/signup[/]', SignupPatientAction::class)->setName('signup_patient');
     $app->get('/refresh[/]', RefreshAction::class)->setName('refresh');
     $app->post('/signin[/]', SigninAction::class)->setName('signin');

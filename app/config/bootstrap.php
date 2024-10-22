@@ -14,6 +14,7 @@ $app = AppFactory::createFromContainer($c);
 
 
 $app->addBodyParsingMiddleware();
+$app->add( \toubeelib\application\middlewares\Cors::class );
 $app->addRoutingMiddleware();
 $app->addErrorMiddleware($c->get('displayErrorDetails'), false, false)
 ->getDefaultErrorHandler()
