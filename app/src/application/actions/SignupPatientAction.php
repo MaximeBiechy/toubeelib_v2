@@ -1,12 +1,13 @@
 <?php
 
+namespace toubeelib\application\actions;
+
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpNotFoundException;
 
-use toubeelib\application\actions\AbstractAction;
 use toubeelib\application\provider\auth\AuthProviderInterface;
 use toubeelib\core\dto\auth\CredentialsDTO;
 use toubeelib\application\renderer\JsonRenderer;
@@ -45,4 +46,3 @@ class SignupPatientAction extends AbstractAction{
       }
     }
   }
-?>

@@ -49,7 +49,7 @@ use toubeelib\infrastructure\db\PDORendezVousRepository;
 use toubeelib\infrastructure\repositories\ArrayPatientRepository;
 use toubeelib\infrastructure\repositories\ArrayPraticienRepository;
 use toubeelib\infrastructure\repositories\ArrayRendezVousRepository;
-use toubeelib\application\actions\SignupAction;
+use toubeelib\application\actions\SignupPatientAction;
 
 return [
 
