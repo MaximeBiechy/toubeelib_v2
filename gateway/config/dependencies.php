@@ -14,7 +14,6 @@ return [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
             ],
-            'timeout' => 10.0,
         ]);
     },
 
