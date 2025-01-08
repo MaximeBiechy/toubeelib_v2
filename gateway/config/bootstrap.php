@@ -2,6 +2,7 @@
 
 use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
+use toubeelib\application\middlewares\Cors;
 
 
 $builder = new ContainerBuilder();
@@ -13,7 +14,7 @@ $app = AppFactory::createFromContainer($c);
 
 
 $app->addBodyParsingMiddleware();
-//$app->add(\toubeelib\application\middlewares\Cors::class);
+$app->add(Cors::class);
 $app->addRoutingMiddleware();
 $app->addErrorMiddleware($c->get('displayErrorDetails'), false, false)
     ->getDefaultErrorHandler()

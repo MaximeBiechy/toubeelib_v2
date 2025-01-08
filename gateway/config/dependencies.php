@@ -9,12 +9,12 @@ return [
 
     ClientInterface::class => function(ContainerInterface $c) {
         return new Client([
-            'base_uri' => 'http://localhost:6080/',
+            'base_uri' => 'http://api.toubeelib/',
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-                'Origin' => 'http://localhost:6080'
-            ]
+            ],
+            'timeout' => 10.0,
         ]);
     },
 

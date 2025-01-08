@@ -24,7 +24,7 @@ services:
     # service toubeelib.db : base de données postgresql
   toubeelib.db:
     image: 'postgres:latest'
-    container_name: postgres_container_toubeelib
+    container_name: postgres_container_toubeelib_v2
     env_file: ./toubeelibdb.env
     ports:
       - '5432:5432'
