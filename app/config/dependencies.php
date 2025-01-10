@@ -120,7 +120,7 @@ return [
     PatientServiceInterface::class => function (ContainerInterface $c) {
         return new PatientService(
             $c->get(PatientRepositoryInterface::class),
-            $c->get(RendezVousRepositoryInterface::class),
+            $c->get(RendezVousServiceInterface::class),
         );
     },
     RendezVousServiceInterface::class => function (ContainerInterface $c) {

@@ -10,16 +10,19 @@ use toubeelib\core\repositoryInterfaces\PatientRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RendezVousRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RepositoryEntityNotFoundException;
 use toubeelib\core\repositoryInterfaces\RepositoryInternalServerError;
+use toubeelib\core\services\rendez_vous\rendezVousInternalServerError;
+use toubeelib\core\services\rendez_vous\RendezVousNotFoundException;
+use toubeelib\core\services\rendez_vous\RendezVousServiceInterface;
 
 class PatientService implements PatientServiceInterface
 {
     private PatientRepositoryInterface $patientRepository;
-    private RendezVousRepositoryInterface $rendezVousRepository;
+    private RendezVousServiceInterface $rendezVousService;
 
-    public function __construct(PatientRepositoryInterface $patientRepository, RendezVousRepositoryInterface $rendezVousRepository)
+    public function __construct(PatientRepositoryInterface $patientRepository, RendezVousServiceInterface $rendezVousService)
     {
         $this->patientRepository = $patientRepository;
-        $this->rendezVousRepository = $rendezVousRepository;
+        $this->rendezVousService = $rendezVousService;
     }
 
     public function createPatient(InputPatientDTO $p): PatientDTO
@@ -51,7 +54,7 @@ class PatientService implements PatientServiceInterface
     public function getRendezVousByPatientId(string $id): array
     {
         try {
-            $rdvs = $this->rendezVousRepository->getRendezVousByPatientId($id);
+            $rdvs = $this->rendezVousService->getRendezVousByPatientId($id);
             // convert to DTO
             $rdvDTOs = [];
             foreach ($rdvs as $rdv) {
@@ -59,9 +62,9 @@ class PatientService implements PatientServiceInterface
                 $rdvDTOs[] = $rdvDTO;
             }
             return $rdvDTOs;
-        } catch(RepositoryEntityNotFoundException $e) {
-            throw new ServicePatientInvalidDataException('invalid Patient ID');
-        } catch(RepositoryInternalServerError $e) {
+        } catch(RepositoryEntityNotFoundException | RendezVousNotFoundException $e) {
+            throw new ServicePatientInvalidDataException('invalid Patient ID ' . $e->getMessage());
+        } catch(RepositoryInternalServerError | RendezVousInternalServerError $e) {
             throw new ServicePatientInternalServerError($e->getMessage());
         }
     }

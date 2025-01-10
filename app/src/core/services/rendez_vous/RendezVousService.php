@@ -257,4 +257,15 @@ class RendezVousService implements RendezVousServiceInterface
         }
     }
 
+    public function getRendezVousByPatientId(string $id): array
+    {
+        try {
+            return $this->rdvRepository->getRendezVousByPatientId($id);
+        } catch (RepositoryEntityNotFoundException $e) {
+            throw new RendezVousNotFoundException($e->getMessage());
+        } catch (RepositoryInternalServerError $e) {
+            throw new RendezVousInternalServerError($e->getMessage());
+        }
+    }
+
 }
