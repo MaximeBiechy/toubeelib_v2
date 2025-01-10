@@ -65,6 +65,9 @@ class PDORendezVousRepository implements RendezVousRepositoryInterface
         try {
             $stmt = $this->pdo->prepare("SELECT * FROM rendez_vous WHERE praticien_id = :praticien_id");
             $stmt->execute(['praticien_id' => $praticienId]);
+            if ($stmt->rowCount() === 0) {
+                throw new RepositoryEntityNotFoundException("Rendez-vous not found");
+            }
             $rdvs = $stmt->fetchAll();
             $rdvsArray = [];
             foreach ($rdvs as $rdv) {

@@ -233,7 +233,7 @@ class RendezVousService implements RendezVousServiceInterface
         try {
             return $this->rdvRepository->getRendezVousByPraticienId($id);
         } catch (RepositoryEntityNotFoundException $e) {
-            throw new RendezVousBadDataException($e->getMessage());
+            throw new RendezVousNotFoundException($e->getMessage());
         } catch (RepositoryInternalServerError $e) {
             throw new RendezVousInternalServerError($e->getMessage());
         }

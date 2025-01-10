@@ -4,13 +4,16 @@ namespace toubeelib\application\actions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Ramsey\Uuid\Rfc4122\Validator;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpInternalServerErrorException;
+use Slim\Exception\HttpNotFoundException;
 use Slim\Routing\RouteContext;
 use toubeelib\application\renderer\JsonRenderer;
 use toubeelib\core\dto\rendez_vous\CalendarRendezVousDTO;
 use toubeelib\core\services\rendez_vous\RendezVousBadDataException;
 use toubeelib\core\services\rendez_vous\rendezVousInternalServerError;
+use toubeelib\core\services\rendez_vous\RendezVousNotFoundException;
 use toubeelib\core\services\rendez_vous\RendezVousServiceInterface;
 
 class ConsultingRendezVousPraticienAction extends AbstractAction
@@ -26,6 +29,10 @@ class ConsultingRendezVousPraticienAction extends AbstractAction
     {
         try{
             $id = $args['ID-PRATICIEN'];
+            $uuidValidator = new Validator();
+            if (!$uuidValidator->validate($args['ID-PRATICIEN'])) {
+                throw new HttpBadRequestException($rq, "Invalid UUID format.");
+            }
             $data = $rq->getQueryParams();
             $date_debut = $data['date_debut'] ?? null;
             $date_fin = $data['date_fin'] ?? null;
@@ -69,6 +76,8 @@ class ConsultingRendezVousPraticienAction extends AbstractAction
             throw new HttpBadRequestException($rq, $e->getMessage());
         } catch ( RendezVousInternalServerError $e) {
             throw new HttpInternalServerErrorException($rq, $e->getMessage());
+        } catch (RendezVousNotFoundException $e) {
+            throw new HttpNotFoundException($rq, $e->getMessage());
         }
     }
 }
