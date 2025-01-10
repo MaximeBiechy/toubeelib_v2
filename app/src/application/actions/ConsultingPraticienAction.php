@@ -4,6 +4,8 @@ namespace toubeelib\application\actions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Ramsey\Uuid\Rfc4122\Validator;
+use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Routing\RouteContext;
@@ -26,6 +28,10 @@ class ConsultingPraticienAction extends AbstractAction
     {
         try{
             $praticienId = $args['ID-PRATICIEN'];
+            $uuidValidator = new Validator();
+            if (!$uuidValidator->validate($args['ID-PRATICIEN'])) {
+                throw new HttpBadRequestException($rq, "Invalid UUID format.");
+            }
             $praticien = $this->servicePraticien->getPraticienById($praticienId);
             $routeContext = RouteContext::fromRequest($rq);
             $routeParser = $routeContext->getRouteParser();
