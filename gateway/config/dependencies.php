@@ -4,6 +4,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Psr\Container\ContainerInterface;
 use toubeelib\application\actions\PraticienAction;
+use toubeelib\application\actions\RendezVousAction;
 
 return [
 
@@ -30,6 +31,9 @@ return [
     // ACTIONS
     PraticienAction::class => function (ContainerInterface $c) {
         return new PraticienAction($c->get('ClientInterfacePraticiens'));
-    }
+    },
+    RendezVousAction::class => function (ContainerInterface $c) {
+        return new RendezVousAction($c->get('ClientInterfaceRDVS'));
+    },
 
 ];
