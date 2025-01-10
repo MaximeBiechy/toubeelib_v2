@@ -7,9 +7,18 @@ use toubeelib\application\actions\PraticienAction;
 
 return [
 
-    ClientInterface::class => function(ContainerInterface $c) {
+    'ClientInterfacePraticiens' => function(ContainerInterface $c) {
         return new Client([
-            'base_uri' => 'http://api.toubeelib/',
+            'base_uri' => 'http://api.praticiens.toubeelib/',
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+    },
+    'ClientInterfaceRDVS' => function(ContainerInterface $c) {
+        return new Client([
+            'base_uri' => 'http://api.rdvs.toubeelib/',
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
@@ -20,7 +29,7 @@ return [
 
     // ACTIONS
     PraticienAction::class => function (ContainerInterface $c) {
-        return new PraticienAction($c->get(ClientInterface::class));
+        return new PraticienAction($c->get('ClientInterfacePraticiens'));
     }
 
 ];
