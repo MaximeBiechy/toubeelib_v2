@@ -7,6 +7,7 @@ return function (\Slim\App $app): \Slim\App {
 
     $app->get('/praticiens[/]', PraticienAction::class);
     $app->get('/praticiens/{ID-PRATICIEN}[/]', PraticienAction::class);
+    $app->get('/praticiens/{ID-PRATICIEN}/rdvs[/]', PraticienAction::class);
 
     return $app;
 };
