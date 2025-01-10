@@ -3,7 +3,7 @@
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Psr\Container\ContainerInterface;
-use toubeelib\application\actions\ConsultingAllPraticiensAction;
+use toubeelib\application\actions\PraticienAction;
 
 return [
 
@@ -19,8 +19,8 @@ return [
 
 
     // ACTIONS
-    ConsultingAllPraticiensAction::class => function (ContainerInterface $c) {
-        return new ConsultingAllPraticiensAction($c->get(ClientInterface::class));
+    PraticienAction::class => function (ContainerInterface $c) {
+        return new PraticienAction($c->get(ClientInterface::class));
     }
 
 ];
