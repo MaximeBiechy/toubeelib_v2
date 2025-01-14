@@ -9,6 +9,7 @@ return function (\Slim\App $app): \Slim\App {
 
     $app->get('/praticiens[/]', PraticienAction::class);
     $app->get('/praticiens/{ID-PRATICIEN}[/]', PraticienAction::class);
+    $app->post('/praticiens[/]', PraticienAction::class)->setName('create_praticien_id');
     $app->get('/praticiens/{ID-PRATICIEN}/disponibilites[/]', RendezVousAction::class)->setName('praticien_id_disponibilites');
     $app->get('/praticiens/{ID-PRATICIEN}/rdvs[/]', RendezVousAction::class)->setName('praticien_id_rdvs');
     $app->post('/praticiens/{ID-PRATICIEN}/indisponibilites[/]', RendezVousAction::class)->setName('praticien_id_indisponibilites');
