@@ -3,6 +3,7 @@
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Psr\Container\ContainerInterface;
+use toubeelib\application\actions\PatientAction;
 use toubeelib\application\actions\PraticienAction;
 use toubeelib\application\actions\RendezVousAction;
 
@@ -26,6 +27,15 @@ return [
             ],
         ]);
     },
+    'ClientInterfacePatient' => function(ContainerInterface $c) {
+        return new Client([
+            'base_uri' => 'http://api.patients.toubeelib/',
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+    },
 
 
     // ACTIONS
@@ -34,6 +44,9 @@ return [
     },
     RendezVousAction::class => function (ContainerInterface $c) {
         return new RendezVousAction($c->get('ClientInterfaceRDVS'));
+    },
+    PatientAction::class => function (ContainerInterface $c) {
+        return new PatientAction($c->get('ClientInterfacePatient'));
     },
 
 ];
