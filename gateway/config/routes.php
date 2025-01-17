@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use toubeelib\application\actions\AuthentificationAction;
 use toubeelib\application\actions\PatientAction;
 use toubeelib\application\actions\PraticienAction;
 use toubeelib\application\actions\RendezVousAction;
@@ -23,6 +24,10 @@ return function (\Slim\App $app): \Slim\App {
 
     $app->get('/patients/{ID-PATIENT}[/]', PatientAction::class)->setName('patient_id');
 
+    // authentification
+    $app->post('/refresh[/]', AuthentificationAction::class)->setName('refresh');
+    $app->post('/signin[/]', AuthentificationAction::class)->setName('signin');
+    $app->post('/register[/]', AuthentificationAction::class)->setName('signup');
 
     return $app;
 };
