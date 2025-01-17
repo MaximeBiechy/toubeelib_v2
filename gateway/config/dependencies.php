@@ -7,6 +7,7 @@ use toubeelib\application\actions\AuthentificationAction;
 use toubeelib\application\actions\PatientAction;
 use toubeelib\application\actions\PraticienAction;
 use toubeelib\application\actions\RendezVousAction;
+use toubeelib\application\middlewares\Validation;
 
 return [
 
@@ -60,6 +61,13 @@ return [
     },
     AuthentificationAction::class => function (ContainerInterface $c) {
         return new AuthentificationAction($c->get('ClientInterfaceAuthentification'));
+    },
+
+    // MIDDLEWARES
+    Validation::class => function(ContainerInterface $c) {
+        return new Validation(
+            $c->get('ClientInterfaceAuthentification')
+        );
     },
 
 ];

@@ -17,6 +17,7 @@ use toubeelib\application\actions\SigninAction;
 use toubeelib\application\actions\UpdatePraticienIndisponibilitiesAction;
 use toubeelib\application\actions\UpdateRendezVousAction;
 use toubeelib\application\actions\UpdateRendezVousEtatAction;
+use toubeelib\application\actions\ValidateAction;
 use toubeelib\application\middlewares\Auth;
 use toubeelib\application\middlewares\AuthzPatient;
 use toubeelib\application\middlewares\AuthzPraticien;
@@ -217,6 +218,11 @@ return [
     RefreshAction::class => function (ContainerInterface $c) {
         return new RefreshAction(
             $c->get(AuthentificationServiceInterface::class)
+        );
+    },
+    ValidateAction::class => function (ContainerInterface $c) {
+        return new ValidateAction(
+            $c->get(AuthProviderInterface::class)
         );
     },
 
