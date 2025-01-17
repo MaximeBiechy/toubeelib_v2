@@ -9,4 +9,5 @@ use toubeelib\core\dto\praticien\SpecialiteDTO;
 interface ServicePraticienInterface
 {
     public function getPraticienById(string $id): PraticienDTO;
+    public function getSpecialiteIdByPraticienId(string $id): SpecialiteDTO;
 }
