@@ -11,7 +11,7 @@ class Praticien extends Entity
     protected string $prenom;
     protected string $adresse;
     protected string $tel;
-    protected ?Specialite $specialite = null; // version simplifiée : une seule spécialité
+    protected ?Specialite $specialite; // version simplifiée : une seule spécialité
 
     public function __construct(string $nom, string $prenom, string $adresse, string $tel)
     {
@@ -19,6 +19,7 @@ class Praticien extends Entity
         $this->prenom = $prenom;
         $this->adresse = $adresse;
         $this->tel = $tel;
+        $this->specialite = new Specialite('fd8b6ca2-663c-4932-bb5c-e0752d3d5d32', 'Généraliste', 'Médecin généraliste');
     }
 
 

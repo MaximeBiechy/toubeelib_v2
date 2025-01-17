@@ -28,6 +28,7 @@ class ServicePraticienHTTP implements ServicePraticienInterface
             $response = $this->remote_praticiens_service->get("/praticiens/$id");
             $data = json_decode($response->getBody()->getContents(), true);
             $p = new Praticien($data['praticien']['nom'], $data['praticien']['prenom'], $data['praticien']['adresse'], $data['praticien']['tel']);
+            $p->setID($data['praticien']['id']);
             $praticien = new PraticienDTO($p);
             return $praticien;
 
