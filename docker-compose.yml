@@ -5,7 +5,7 @@ services:
   # service api.toubeelib : api pour la prise de rdv
   #
   api.toubeelib:
-  #  image: 'canals/php:8.3-cli'
+    #  image: 'canals/php:8.3-cli'
     build:
       context: build
       dockerfile: 8.3-cli.Dockerfile
@@ -70,6 +70,7 @@ services:
       - toubeelib.net
     depends_on:
       - toubeelib.db
+      - rabbitmq
     command: php -S 0.0.0.0:80 -t /var/php/public
 
 
@@ -121,7 +122,7 @@ services:
     ports:
       - '6081:80'
     volumes:
-        - ./gateway:/var/gateway
+      - ./gateway:/var/gateway
     working_dir: /var/gateway
     networks:
       - toubeelib.net
@@ -129,6 +130,23 @@ services:
       - toubeelib.db
     command: php -S 0.0.0.0:80 -t /var/gateway/public
 
+  rabbitmq:
+    image: rabbitmq:4-management
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+    networks:
+      - toubeelib.net
+    volumes:
+      - ./rabbitmq_dir:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=@dm1#!
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 8s
+      timeout: 30s
+      retries: 3
 
 networks:
   toubeelib.net:
