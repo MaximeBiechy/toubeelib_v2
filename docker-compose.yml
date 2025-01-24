@@ -91,6 +91,24 @@ services:
       - toubeelib.db
     command: php -S 0.0.0.0:80 -t /var/php/public
 
+  api.mail.toubeelib:
+    #  image: 'canals/php:8.3-cli'
+    build:
+      context: build
+      dockerfile: 8.3-cli.Dockerfile
+    env_file: ./toubeelib.env
+    ports:
+      - '6086:80'
+    volumes:
+      - ./app-mail:/var/php
+    working_dir: /var/php
+    networks:
+      - toubeelib.net
+    depends_on:
+      - toubeelib.db
+      - rabbitmq
+    command: php -S 0.0.0.0:80 -t /var/php/public
+
     # service toubeelib.db : base de données postgresql
   toubeelib.db:
     image: 'postgres:latest'

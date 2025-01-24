@@ -45,6 +45,7 @@ class RendezVousService implements RendezVousServiceInterface
                 throw new RendezVousSpecialitePraticienDifferentException($createRDVDTO->specialiteDM . '!=' . $specialitePraticien);
             }
 
+
             // ! Vérifie que le praticien est disponible à la date et à l'heure demandées
             $rdvs = $this->rdvRepository->getRendezVousByPraticienId($createRDVDTO->praticienID);
             if ($rdvs != null) {

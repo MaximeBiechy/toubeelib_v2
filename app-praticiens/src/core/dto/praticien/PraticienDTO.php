@@ -12,6 +12,7 @@ class PraticienDTO extends DTO
     protected string $prenom;
     protected string $adresse;
     protected string $tel;
+    protected string $specialite_id;
     protected string $specialite_label;
 
     public function __construct(Praticien $p)
@@ -21,6 +22,7 @@ class PraticienDTO extends DTO
         $this->prenom = $p->prenom;
         $this->adresse = $p->adresse;
         $this->tel = $p->tel;
+        $this->specialite_id = $p->specialite->id;
         $this->specialite_label = $p->specialite->label;
     }
 }

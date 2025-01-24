@@ -31,6 +31,7 @@ class ServicePraticienHTTP implements ServicePraticienInterface
             $data = json_decode($response->getBody()->getContents(), true);
             $p = new Praticien($data['praticien']['nom'], $data['praticien']['prenom'], $data['praticien']['adresse'], $data['praticien']['tel']);
             $p->setID($data['praticien']['id']);
+            $p->setSpecialite(new Specialite($data['praticien']['specialite_id'], $data['praticien']['specialite_label'], ''));
             $praticien = new PraticienDTO($p);
             return $praticien;
 

@@ -2,6 +2,8 @@
 
 namespace toubeelib\application\actions;
 
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Respect\Validation\Exceptions\NestedValidationException;
@@ -59,6 +61,27 @@ class CreateRendezVousAction extends AbstractAction{
             $dto = new CreateRendezVousDTO($data["date"], $data["duree"], $data["praticienID"], $data["patientID"], $data["specialiteDM"]);
 
             $rdv = $this->rendezVousServiceInterface->creerRendezvous($dto);
+
+            // TODO: move from here
+            $connection = new AMQPStreamConnection('rabbitmq',5672,'admin','@dm1#!');
+            $channel = $connection->channel();
+            $msg_body = [
+                "date" => $rdv->date,
+                "duree" => $rdv->duree,
+                "praticienID" => $rdv->praticienID,
+                "patientID" => $rdv->patientID,
+                "specialiteDM" => $rdv->speciality
+            ];
+            $msg = new AMQPMessage(json_encode($msg_body)) ;
+            $channel->basic_publish($msg, ''
+                , 'mail_queue');
+            $channel->basic_publish($msg, 'amq.direct', 'mail_routing_key');
+            print "[x] commande publiée : \n";
+            $channel->close();
+            $connection->close();
+            // END TODO
+
+
             $urlPraticien = $routeParser->urlFor('praticien_id', ['ID-PRATICIEN' => $rdv->praticienID]);
             $urlPatient = $routeParser->urlFor('patient_id', ['ID-PATIENT' => $rdv->patientID]);
             $urlRDV = $routeParser->urlFor('rendez_vous_id', ['ID-RDV' => $rdv->id]);
