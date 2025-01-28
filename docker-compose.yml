@@ -107,7 +107,7 @@ services:
     depends_on:
       - toubeelib.db
       - rabbitmq
-    command: php -S 0.0.0.0:80 -t /var/php/public
+    command: php /var/php/src/infrastructure/http/ServiceMailHTTP.php
 
     # service toubeelib.db : base de données postgresql
   toubeelib.db:
@@ -165,6 +165,13 @@ services:
       interval: 8s
       timeout: 30s
       retries: 3
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - '1080:1080'
+    networks:
+      - toubeelib.net
 
 networks:
   toubeelib.net:

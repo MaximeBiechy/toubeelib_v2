@@ -66,11 +66,13 @@ class CreateRendezVousAction extends AbstractAction{
             $connection = new AMQPStreamConnection('rabbitmq',5672,'admin','@dm1#!');
             $channel = $connection->channel();
             $msg_body = [
-                "date" => $rdv->date,
-                "duree" => $rdv->duree,
-                "praticienID" => $rdv->praticienID,
-                "patientID" => $rdv->patientID,
-                "specialiteDM" => $rdv->speciality
+                "from" => $data["from"],
+                "subject" => $data["subject"],
+                "text" => $data["text"],
+                "html" => $data["html"],
+                "smtp" => "smtp://mailcatcher:1025",
+                "mailPraticien" => $data["mailPraticien"],
+                "mailPatient" => $data["mailPatient"]
             ];
             $msg = new AMQPMessage(json_encode($msg_body)) ;
             $channel->basic_publish($msg, ''

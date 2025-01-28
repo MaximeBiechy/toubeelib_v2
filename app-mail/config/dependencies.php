@@ -5,9 +5,9 @@ use GuzzleHttp\Client;
 use Psr\Container\ContainerInterface;
 use toubeelib\application\actions\CancelRendezVousAction;
 use toubeelib\application\actions\ConsultingPraticienDisponibilitiesAction;
+use toubeelib\application\actions\ConsultingRendezVousAction;
 use toubeelib\application\actions\ConsultingRendezVousPraticienAction;
 use toubeelib\application\actions\CreateRendezVousAction;
-use toubeelib\application\actions\ConsultingRendezVousAction;
 use toubeelib\application\actions\UpdateRendezVousAction;
 use toubeelib\application\actions\UpdateRendezVousEtatAction;
 use toubeelib\application\provider\auth\AuthProviderInterface;
@@ -18,6 +18,8 @@ use toubeelib\core\repositoryInterfaces\PatientRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\PraticienRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RendezVousRepositoryInterface;
 use toubeelib\core\services\auth\AuthentificationServiceInterface;
+use toubeelib\core\services\mail\MailServiceInterface;
+use toubeelib\core\services\mail\MailService;
 use toubeelib\core\services\patient\PatientServiceInterface;
 use toubeelib\core\services\praticien\ServicePraticienInterface;
 use toubeelib\core\services\rendez_vous\RendezVousService;
@@ -42,6 +44,20 @@ return [
                 $c->get('log.prog.file'),
                 $c->get('log.prog.level')));
         return $logger;
+    },
+
+    'pdo_praticien' => function (ContainerInterface $c) {
+        $data = parse_ini_file($c->get('praticien.ini'));
+        $pdo_praticien = new PDO('pgsql:host='.$data['host'].';dbname='.$data['dbname'], $data['username'], $data['password']);
+        $pdo_praticien->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        return $pdo_praticien;
+    },
+
+    'pdo_patient' => function (ContainerInterface $c) {
+        $data = parse_ini_file($c->get('patient.ini'));
+        $pdo_patient = new PDO('pgsql:host='.$data['host'].';dbname='.$data['dbname'], $data['username'], $data['password']);
+        $pdo_patient->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        return $pdo_patient;
     },
 
     'pdo_rendez_vous' => function (ContainerInterface $c) {
@@ -70,6 +86,9 @@ return [
     },
 
     // Repositories
+    MailServiceInterface::class => function (ContainerInterface $c) {
+        return new MailService();
+    },
     PraticienRepositoryInterface::class => function (ContainerInterface $c) {
         return new PDOPraticienRepository($c->get('pdo_praticien'));
     },
@@ -106,6 +125,7 @@ return [
             $c->get('prog.logger')
         );
     },
+
 
     // Actions
     CreateRendezVousAction::class => function (ContainerInterface $c) {
