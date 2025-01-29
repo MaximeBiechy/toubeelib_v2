@@ -105,9 +105,9 @@ services:
     networks:
       - toubeelib.net
     depends_on:
-      - toubeelib.db
-      - rabbitmq
-    command: php /var/php/src/infrastructure/http/ServiceMailHTTP.php
+      rabbitmq:
+        condition: service_healthy
+    command: php src/infrastructure/http/ServiceMailHTTP.php
 
     # service toubeelib.db : base de données postgresql
   toubeelib.db:
