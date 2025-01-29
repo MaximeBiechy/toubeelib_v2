@@ -38,10 +38,10 @@ Mot de passe: root<br>
 Base de données: toubeelib<br>
 
 - Créer les bd suivantes :<br>
-    - toubeelib_auth
-    - toubeelib_rdvs
-    - toubeelib_praticien
-    - toubeelib_patient
+    - toubee_auth
+    - toubee_rdvs
+    - toubee_praticien
+    - toubee_patient
   
 
 - Importer les fichiers sql dans les bases de données correspondantes (dans le dossier sql)
@@ -53,7 +53,7 @@ Base de données: toubeelib<br>
       "from": "no-reply@example.com",<br>
       "subject": "nouveau rdv",<br>
       "text": "nouveau rdv",<br>
-      "html": "<p>nouveau rdv.</p>",<br>
+      "html": "nouveau rdv.",<br>
       "mailPraticien": "timothee@gmail.com",<br>
       "mailPatient": "maximeee@gmail.com",<br>
       "date": "2025-07-1 09:00:00",<br>
