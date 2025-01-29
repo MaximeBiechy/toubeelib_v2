@@ -5,7 +5,9 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use toubeelib\core\services\mail\MailService;
 
-$queue = 'mail_queue';
+$exchange_name = 'direct_mail';
+$queue_name = 'mail_queue';
+$routing_key = 'mail_routing_key';
 try {
     echo "En attente de message";
     $mailService = new MailService();
@@ -13,7 +15,11 @@ try {
     $connection = new AMQPStreamConnection('rabbitmq', 5672, 'admin', '@dm1#!');
     $channel = $connection->channel();
 
-    $channel->queue_purge($queue);
+    $channel->exchange_declare($exchange_name, 'direct', false, true, false);
+    $channel->queue_declare($queue_name, false, true, false, false);
+    $channel->queue_bind($queue_name, $exchange_name, $routing_key);
+
+    $channel->queue_purge($queue_name);
 
     $callback = function (AMQPMessage $msg) {
         global $mailService;
@@ -30,7 +36,7 @@ try {
         print_r($msg_body);
         $msg->getChannel()->basic_ack($msg->getDeliveryTag());
     };
-    $channel->basic_consume($queue,
+    $channel->basic_consume($queue_name,
         ''
         , false, false, false, false, $callback);
     try {
