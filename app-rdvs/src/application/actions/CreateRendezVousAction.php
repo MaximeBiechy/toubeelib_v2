@@ -77,7 +77,7 @@ class CreateRendezVousAction extends AbstractAction{
             $msg = new AMQPMessage(json_encode($msg_body)) ;
             $channel->basic_publish($msg, ''
                 , 'mail_queue');
-            $channel->basic_publish($msg, 'amq.direct', 'mail_routing_key');
+            $channel->basic_publish($msg, 'direct_mail', 'mail_routing_key');
             print "[x] commande publiée : \n";
             $channel->close();
             $connection->close();
